@@ -73,6 +73,14 @@ This project implements enterprise-grade security practices:
 - `src/fetch.py` – Simple data fetchers (top artists/tracks, recently played)
 - `src/visualize.py` – First chart: Top 10 artists bar chart
 - `src/main.py` – Orchestrates auth → fetch → save CSV → plot
+- `src/config.py` – Secure configuration management for all API keys
+- `src/lastfm_integration.py` – Last.fm global trends integration
+- `src/musicbrainz_integration.py` – Artist metadata and relationships
+- `src/audiodb_integration.py` – Rich artist profiles and biographies
+- `src/spotify_charts_integration.py` – Real-time chart data scraping
+- `src/multi_source_main.py` – Comprehensive multi-source analysis
+- `validate_security.py` – Security validation and setup
+- `simple_multi_source_demo.py` – Quick demo of multi-source capabilities
 - `notebooks/` – Place for experiments (optional)
 - `data/` – Saved CSVs and images (git-ignored)
 
@@ -85,6 +93,28 @@ SPOTIFY_CLIENT_ID=your_client_id_here
 SPOTIFY_CLIENT_SECRET=your_client_secret_here
 SPOTIFY_REDIRECT_URI=http://127.0.0.1:8888/callback
 SPOTIFY_SCOPES=user-top-read user-read-recently-played playlist-read-private
+
+# Optional: Last.fm for global trends
+LASTFM_API_KEY=your_lastfm_api_key_here
+
+# Optional: AudioDB for rich profiles (defaults to free tier)
+AUDIODB_API_KEY=123
+```
+
+## Quick Demo
+
+Try the multi-source integration:
+
+```powershell
+# Simple working demo
+python simple_multi_source_demo.py
+
+# Test individual APIs
+python src/musicbrainz_test.py
+python src/audiodb_test.py
+
+# Full security validation
+python validate_security.py
 ```
 
 ## Next ideas
