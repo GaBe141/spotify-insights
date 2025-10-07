@@ -1,0 +1,4 @@
+SPOTIFY_CLIENT_ID=954c7fef321d474f981095ccb6b939c1
+SPOTIFY_CLIENT_SECRET=db9f3848d89b413eb010babfe6daefac
+SPOTIFY_REDIRECT_URI=http://127.0.0.1:8888/callback
+SPOTIFY_SCOPES=user-top-read user-read-recently-played playlist-read-private

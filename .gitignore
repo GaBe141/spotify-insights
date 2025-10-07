@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.cache
+.idea/
+.vscode/
+
+# Data
+/data/*
+!data/.gitkeep
+
+# Notebooks
+*.ipynb_checkpoints
