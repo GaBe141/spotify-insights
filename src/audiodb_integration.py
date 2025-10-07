@@ -34,11 +34,11 @@ class AudioDBAPI:
         """Make a request to AudioDB API with rate limiting."""
         self._rate_limit()
         
-        # Use API key if available, otherwise use public endpoints
+        # Use API key if available, otherwise use free key (123)
         if self.api_key:
             url = f"{BASE_URL}/{self.api_key}/{endpoint}"
         else:
-            url = f"{BASE_URL}/1/{endpoint}"
+            url = f"{BASE_URL}/123/{endpoint}"  # Free API key is 123
         
         try:
             response = self.session.get(url, params=params)
@@ -231,14 +231,19 @@ class AudioDBAPI:
 
 
 def get_audiodb_client() -> AudioDBAPI:
-    """Get AudioDB API client with optional API key."""
-    # Try to get API key from environment (optional)
+    """Get AudioDB API client with secure configuration."""
     try:
+        from .config import get_config
+        config_manager = get_config()
+        audiodb_config = config_manager.get_audiodb_config()
+        return AudioDBAPI(audiodb_config['api_key'])
+    except ImportError:
+        # Fallback for standalone execution
         import os
-        api_key = os.getenv('AUDIODB_API_KEY')
+        api_key = os.getenv('AUDIODB_API_KEY', '123')  # Default to free key
         return AudioDBAPI(api_key)
     except Exception:
-        return AudioDBAPI()
+        return AudioDBAPI('123')  # Default to free key
 
 
 def enrich_spotify_artists_with_audiodb(spotify_df: pd.DataFrame) -> pd.DataFrame:

@@ -53,6 +53,14 @@ def main():
         else:
             print(f"{'Last.fm':<15} {'❌ Error':<12} {error}")
     
+    # AudioDB status
+    if status['audiodb']['configured']:
+        tier = status['audiodb'].get('tier', 'unknown')
+        print(f"{'AudioDB':<15} {'✅ Ready':<12} {tier.title()} tier access")
+    else:
+        error = status['audiodb']['error']
+        print(f"{'AudioDB':<15} {'❌ Error':<12} {error}")
+    
     print("\n" + "=" * 60)
     print("🛡️  Security Checklist")
     print("=" * 60)

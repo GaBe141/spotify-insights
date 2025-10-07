@@ -96,6 +96,31 @@ class SecureConfig:
         
         return value
     
+    def get_audiodb_config(self) -> Optional[Dict[str, str]]:
+        """Get AudioDB API configuration with validation."""
+        import os
+        api_key = os.getenv('AUDIODB_API_KEY')
+        
+        # AudioDB provides a free API key (123) that everyone can use
+        # Premium keys are longer alphanumeric strings
+        if not api_key or api_key in ('your_audiodb_api_key_here', ''):
+            return {
+                'api_key': '123',  # Free API key
+                'tier': 'free'
+            }
+        
+        # Validate premium key format (should be longer than the free key)
+        if len(api_key) > 5:  # Premium keys are longer
+            return {
+                'api_key': api_key,
+                'tier': 'premium'
+            }
+        
+        return {
+            'api_key': '123',  # Default to free
+            'tier': 'free'
+        }
+    
     def _is_valid_lastfm_key(self, key: str) -> bool:
         """Validate Last.fm API key format."""
         return len(key) == 32 and all(c in '0123456789abcdef' for c in key.lower())
@@ -104,7 +129,8 @@ class SecureConfig:
         """Validate all configurations and return status."""
         status: Dict[str, Dict[str, Any]] = {
             'spotify': {'configured': False, 'error': None},
-            'lastfm': {'configured': False, 'error': None}
+            'lastfm': {'configured': False, 'error': None},
+            'audiodb': {'configured': False, 'error': None}
         }
         
         # Test Spotify config
@@ -125,6 +151,17 @@ class SecureConfig:
         except Exception as e:
             status['lastfm']['error'] = str(e)
         
+        # Test AudioDB config
+        try:
+            audiodb_config = self.get_audiodb_config()
+            if audiodb_config:
+                status['audiodb']['configured'] = True
+                status['audiodb']['tier'] = audiodb_config['tier']
+            else:
+                status['audiodb']['error'] = "API configuration failed"
+        except Exception as e:
+            status['audiodb']['error'] = str(e)
+        
         return status
     
     def create_env_template(self) -> str:
@@ -140,6 +177,11 @@ SPOTIFY_SCOPES=user-top-read user-read-recently-played playlist-read-private use
 # Get these from: https://www.last.fm/api/account/create
 LASTFM_API_KEY=your_lastfm_api_key_here
 LASTFM_SHARED_SECRET=your_lastfm_shared_secret_here
+
+# AudioDB API Configuration (Optional - defaults to free tier)
+# Get premium key from: https://www.theaudiodb.com/ (after creating account)
+# Free tier (123) provides basic access, premium unlocks additional features
+AUDIODB_API_KEY=123
 
 # Security Notes:
 # - Never commit this file to version control
