@@ -21,8 +21,8 @@ def main():
     print("-" * 50)
     
     try:
-        from statistical_analysis import StreamingDataQualityAnalyzer, StreamingForecastingEngine
-        from statistical_viz import StatisticalVisualizationEngine
+        from src.statistical_analysis import StreamingDataQualityAnalyzer, StreamingForecastingEngine
+    # Visualization engine is optional; using library checks instead
         
         # Load sample data for statistical analysis
         data_files = [
@@ -73,9 +73,9 @@ def main():
                         print(f"      Outliers detected: {outlier_count}")
                         print(f"      Data quality score: {quality_score:.2f}/1.0")
                     else:
-                        print(f"      No suitable value columns found")
+                        print("      No suitable value columns found")
                 else:
-                    print(f"      Insufficient data for quality analysis")
+                    print("      Insufficient data for quality analysis")
             
             # Demonstrate forecasting
             print("\n🔮 Running Forecasting Analysis...")
@@ -175,22 +175,10 @@ def main():
     print("-" * 50)
     
     try:
-        # Check for visualization dependencies
-        matplotlib_available = False
-        plotly_available = False
-        
-        try:
-            import matplotlib.pyplot as plt
-            import seaborn as sns
-            matplotlib_available = True
-        except ImportError:
-            pass
-        
-        try:
-            import plotly.graph_objects as go
-            plotly_available = True
-        except ImportError:
-            pass
+        # Check for visualization dependencies without importing modules
+        import importlib.util
+        matplotlib_available = bool(importlib.util.find_spec('matplotlib.pyplot')) and bool(importlib.util.find_spec('seaborn'))
+        plotly_available = bool(importlib.util.find_spec('plotly.graph_objects'))
         
         print(f"📊 Matplotlib available: {matplotlib_available}")
         print(f"📊 Plotly available: {plotly_available}")

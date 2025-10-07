@@ -6,29 +6,18 @@ Creates interactive charts and dashboards for trending analysis.
 import json
 import warnings
 from pathlib import Path
-from typing import Dict, List, Any
-from datetime import datetime
+from typing import Dict, List, Any, Optional, cast
 
-import pandas as pd
-import numpy as np
+# Avoid heavy imports at module load; import within functions when needed
 
 warnings.filterwarnings('ignore')
 
 try:
-    import matplotlib.pyplot as plt
-    import matplotlib.dates as mdates
-    from matplotlib.patches import Rectangle
-    import seaborn as sns
-    MATPLOTLIB_AVAILABLE = True
-except ImportError:
+    import importlib.util as _ils
+    MATPLOTLIB_AVAILABLE = bool(_ils.find_spec('matplotlib.pyplot')) and bool(_ils.find_spec('seaborn'))
+    PLOTLY_AVAILABLE = bool(_ils.find_spec('plotly.graph_objects')) and bool(_ils.find_spec('plotly.subplots'))
+except Exception:
     MATPLOTLIB_AVAILABLE = False
-
-try:
-    import plotly.graph_objects as go
-    from plotly.subplots import make_subplots
-    import plotly.express as px
-    PLOTLY_AVAILABLE = True
-except ImportError:
     PLOTLY_AVAILABLE = False
 
 
@@ -48,6 +37,8 @@ class TrendingVisualizationEngine:
         }
         
         if MATPLOTLIB_AVAILABLE:
+            import matplotlib.pyplot as plt  # type: ignore
+            import seaborn as sns  # type: ignore
             # Use a safe default style if the requested one isn't available
             available_styles = plt.style.available
             if self.style in available_styles:
@@ -57,13 +48,14 @@ class TrendingVisualizationEngine:
             
             # Set color palette
             colors = list(self.color_palette.values())
-            sns.set_palette(colors) if 'sns' in globals() else None
+            sns.set_palette(colors)
     
     def plot_trending_timeline(self, trending_data: Dict[str, Any], 
-                              save_path: str = None) -> str:
+                              save_path: Optional[str] = None) -> str:
         """Create timeline visualization of trending patterns."""
         if not MATPLOTLIB_AVAILABLE:
             return "Matplotlib not available for plotting"
+        import matplotlib.pyplot as plt  # type: ignore
         
         fig, axes = plt.subplots(2, 2, figsize=(16, 12))
         fig.suptitle('Trending Analysis Timeline Dashboard', fontsize=16, fontweight='bold')
@@ -106,8 +98,8 @@ class TrendingVisualizationEngine:
             unique_directions = list(set(all_directions))
             colors = [self.color_palette.get(direction, '#888888') for direction in all_directions]
             
-            scatter = ax2.scatter(range(len(all_growth_rates)), all_growth_rates, 
-                                c=colors, alpha=0.7, s=60)
+            ax2.scatter(range(len(all_growth_rates)), all_growth_rates, 
+                        c=colors, alpha=0.7, s=60)
             ax2.set_title('Growth Rate Distribution')
             ax2.set_xlabel('Item Index')
             ax2.set_ylabel('Growth Rate (%)')
@@ -131,7 +123,8 @@ class TrendingVisualizationEngine:
         emerging_momentum = [item['momentum'] * 100 for item in emerging_trends[:5]]  # Scale for comparison
         
         if viral_names or emerging_names:
-            x_pos = np.arange(max(len(viral_names), len(emerging_names)))
+            max_len = max(len(viral_names), len(emerging_names))
+            x_pos = list(range(max_len))
             
             if viral_names:
                 ax3.barh(x_pos[:len(viral_names)], viral_growth, 
@@ -139,7 +132,7 @@ class TrendingVisualizationEngine:
                         label='Viral Content (Growth %)')
             
             if emerging_names:
-                ax3.barh(x_pos[:len(emerging_names)] + 0.4, emerging_momentum, 
+                ax3.barh([v + 0.4 for v in x_pos[:len(emerging_names)]], emerging_momentum, 
                         color=self.color_palette['emerging'], alpha=0.7,
                         label='Emerging Trends (Momentum × 100)')
             
@@ -153,7 +146,7 @@ class TrendingVisualizationEngine:
         
         # Plot 4: Trend Direction Summary (Pie Chart)
         ax4 = axes[1, 1]
-        direction_counts = {}
+        direction_counts: Dict[str, int] = {}
         
         for category_data in categories.values():
             for direction, count in category_data.get('directions', {}).items():
@@ -178,10 +171,14 @@ class TrendingVisualizationEngine:
         return "Trending timeline visualization complete"
     
     def create_interactive_trending_dashboard(self, trending_data: Dict[str, Any],
-                                            save_path: str = None) -> str:
+                                            save_path: Optional[str] = None) -> str:
         """Create interactive trending dashboard using Plotly."""
         if not PLOTLY_AVAILABLE:
             return "Plotly not available for interactive dashboard"
+        # Local imports to avoid heavy module load at import time
+        import pandas as pd  # type: ignore
+        import plotly.graph_objects as go  # type: ignore
+        from plotly.subplots import make_subplots  # type: ignore
         
         # Create subplots
         fig = make_subplots(
@@ -266,7 +263,7 @@ class TrendingVisualizationEngine:
             )
         
         # Plot 5: Trend Direction Distribution
-        direction_counts = {}
+        direction_counts: Dict[str, int] = {}
         for category_data in categories.values():
             for direction, count in category_data.get('directions', {}).items():
                 direction_counts[direction] = direction_counts.get(direction, 0) + count
@@ -323,10 +320,15 @@ class TrendingVisualizationEngine:
         return "Interactive trending dashboard created successfully"
     
     def plot_trending_heatmap(self, time_series_data: Dict[str, List], 
-                             save_path: str = None) -> str:
+                             save_path: Optional[str] = None) -> str:
         """Create heatmap visualization of trending patterns over time."""
         if not MATPLOTLIB_AVAILABLE:
             return "Matplotlib not available for heatmap"
+        # Local imports
+        import pandas as pd  # type: ignore
+        import numpy as np  # type: ignore
+        import matplotlib.pyplot as plt  # type: ignore
+        import seaborn as sns  # type: ignore
         
         if not time_series_data:
             return "No time series data provided"
@@ -364,10 +366,13 @@ class TrendingVisualizationEngine:
         return "Trending heatmap visualization complete"
     
     def create_trend_prediction_chart(self, predictions: Dict[str, Any],
-                                    save_path: str = None) -> str:
+                                    save_path: Optional[str] = None) -> str:
         """Create visualization for trend predictions."""
         if not MATPLOTLIB_AVAILABLE:
             return "Matplotlib not available for plotting"
+        # Local imports
+        import numpy as np  # type: ignore
+        import matplotlib.pyplot as plt  # type: ignore
         
         if not predictions:
             return "No prediction data provided"
@@ -534,7 +539,7 @@ if __name__ == "__main__":
         viz_engine.plot_trending_timeline(sample_data)
         
         print("📊 Testing prediction charts...")
-        viz_engine.create_trend_prediction_chart(sample_data['predictions'])
+    viz_engine.create_trend_prediction_chart(cast(Dict[str, Any], sample_data['predictions']))
     
     if PLOTLY_AVAILABLE:
         print("📊 Testing interactive dashboard...")

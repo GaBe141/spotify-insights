@@ -107,7 +107,7 @@ class TrendingItem:
     metrics: TrendMetrics
     rank: Optional[int] = None
     rank_change: Optional[int] = None
-    tags: List[str] = None
+    tags: Optional[List[str]] = None
     
     def __post_init__(self):
         if self.tags is None:
@@ -323,8 +323,8 @@ class TrendingSchema:
         }
     
     def add_data_point(self, item_id: str, name: str, category: TrendCategory,
-                      value: float, timestamp: datetime = None,
-                      metadata: Dict[str, Any] = None) -> None:
+                      value: float, timestamp: Optional[datetime] = None,
+                      metadata: Optional[Dict[str, Any]] = None) -> None:
         """Add a new data point for trending analysis."""
         if timestamp is None:
             timestamp = datetime.now()
@@ -410,7 +410,7 @@ class TrendingSchema:
                 previous_value=item.previous_value,
                 data_points=filtered_points,
                 metrics=metrics,
-                tags=item.tags.copy()
+                tags=item.tags.copy() if item.tags is not None else []
             )
             
             return updated_item
@@ -517,12 +517,12 @@ class TrendingSchema:
             'volatility_warning': metrics.volatility > 0.3
         }
     
-    def export_trending_snapshot(self, filepath: str = None) -> Dict[str, Any]:
+    def export_trending_snapshot(self, filepath: Optional[str] = None) -> Dict[str, Any]:
         """Export current trending analysis snapshot."""
         if filepath is None:
             filepath = f"data/trending_snapshot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
         
-        snapshot = {
+        snapshot: Dict[str, Any] = {
             'timestamp': datetime.now().isoformat(),
             'total_items': len(self.trending_items),
             'categories': {},
@@ -540,17 +540,20 @@ class TrendingSchema:
         # Analyze by category
         for category in TrendCategory:
             trending_items = self.get_trending_by_category(category)
-            snapshot['categories'][category.value] = {
+            category_data: Dict[str, Any] = {
                 'total_items': len(trending_items),
                 'top_trending': [item.to_dict() for item in trending_items[:5]],
                 'directions': {}
             }
+            snapshot['categories'][category.value] = category_data
             
             # Count directions
+            directions_dict: Dict[str, int] = category_data['directions']
+            trending_summary: Dict[str, int] = snapshot['trending_summary']
             for direction in TrendDirection:
                 count = len([item for item in trending_items if item.direction == direction])
-                snapshot['categories'][category.value]['directions'][direction.value] = count
-                snapshot['trending_summary'][f'{direction.value}_count'] += count
+                directions_dict[direction.value] = count
+                trending_summary[f'{direction.value}_count'] += count
         
         # Get viral content
         viral_content = self.get_viral_content()
@@ -561,10 +564,10 @@ class TrendingSchema:
         snapshot['emerging_trends'] = [item.to_dict() for item in emerging_trends]
         
         # Save to file
-        filepath = Path(filepath)
-        filepath.parent.mkdir(parents=True, exist_ok=True)
+        filepath_obj = Path(filepath)
+        filepath_obj.parent.mkdir(parents=True, exist_ok=True)
         
-        with open(filepath, 'w') as f:
+        with open(filepath_obj, 'w') as f:
             json.dump(snapshot, f, indent=2, default=str)
         
         return snapshot
@@ -575,7 +578,7 @@ def create_sample_trending_data() -> TrendingSchema:
     schema = TrendingSchema()
     
     # Sample artists with different trending patterns
-    artists_data = [
+    artists_data: List[Dict[str, Any]] = [
         # Viral artist
         {
             'id': 'artist_1',
@@ -614,13 +617,15 @@ def create_sample_trending_data() -> TrendingSchema:
     base_time = datetime.now() - timedelta(days=10)
     
     for artist in artists_data:
-        for i, value in enumerate(artist['values']):
+        artist_values = artist['values']
+        assert isinstance(artist_values, list)
+        for i, value in enumerate(artist_values):
             timestamp = base_time + timedelta(days=i)
             schema.add_data_point(
-                item_id=artist['id'],
-                name=artist['name'],
+                item_id=str(artist['id']),
+                name=str(artist['name']),
                 category=artist['category'],
-                value=value,
+                value=float(value),
                 timestamp=timestamp,
                 metadata={'pattern': artist['pattern']}
             )

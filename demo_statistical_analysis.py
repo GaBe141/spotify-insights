@@ -8,9 +8,9 @@ from datetime import datetime
 # Add src directory to path
 sys.path.append(str(Path(__file__).parent / "src"))
 
-from statistical_analysis import StreamingDataQualityAnalyzer
+from src.statistical_analysis import StreamingDataQualityAnalyzer
 import pandas as pd
-import numpy as np
+ 
 
 
 def load_existing_data():
@@ -80,7 +80,7 @@ def analyze_spotify_track_data(df):
     )
     
     # Print insights
-    print(f"\n   📈 Quality Analysis Results:")
+    print("\n   📈 Quality Analysis Results:")
     
     basic_stats = quality_report.get('basic_stats', {})
     print(f"      Total tracks analyzed: {basic_stats.get('total_rows', 0)}")
@@ -90,7 +90,7 @@ def analyze_spotify_track_data(df):
     print(f"      Missing values: {total_missing}")
     
     # Feature insights
-    print(f"\n   🎶 Music Feature Insights:")
+    print("\n   🎶 Music Feature Insights:")
     for col in numeric_cols[:5]:  # Show top 5 features
         if col in df.columns:
             col_mean = df[col].mean()
@@ -100,7 +100,7 @@ def analyze_spotify_track_data(df):
     # Recommendations
     recommendations = quality_report.get('recommendations', [])
     if recommendations:
-        print(f"\n   💡 Data Quality Recommendations:")
+        print("\n   💡 Data Quality Recommendations:")
         for i, rec in enumerate(recommendations[:3], 1):
             print(f"      {i}. {rec}")
     
@@ -144,7 +144,7 @@ def analyze_listening_history(df):
             value_cols=['daily_plays', 'unique_artists', 'variety_ratio']
         )
         
-        print(f"\n   📈 Listening Pattern Analysis:")
+        print("\n   📈 Listening Pattern Analysis:")
         print(f"      Average daily plays: {daily_stats['daily_plays'].mean():.1f}")
         print(f"      Average unique artists/day: {daily_stats['unique_artists'].mean():.1f}")
         print(f"      Average variety ratio: {daily_stats['variety_ratio'].mean():.3f}")
@@ -167,7 +167,7 @@ def analyze_listening_history(df):
 
 def generate_streaming_insights(data_files):
     """Generate comprehensive insights from available data."""
-    print(f"\n🧠 Generating Streaming Insights...")
+    print("\n🧠 Generating Streaming Insights...")
     
     insights = {
         'data_sources_analyzed': len(data_files),
@@ -235,7 +235,7 @@ def generate_streaming_insights(data_files):
 
 def create_analysis_report(data_files, insights):
     """Create a comprehensive analysis report."""
-    print(f"\n📊 Creating Analysis Report...")
+    print("\n📊 Creating Analysis Report...")
     
     report = {
         'timestamp': datetime.now().isoformat(),
@@ -300,7 +300,7 @@ def main():
             analysis_results[filename] = result
         else:
             # Generic analysis for other files
-            print(f"   📊 Basic file info:")
+            print("   📊 Basic file info:")
             print(f"      Rows: {len(df)}")
             print(f"      Columns: {len(df.columns)}")
             print(f"      Columns: {', '.join(df.columns[:5])}{'...' if len(df.columns) > 5 else ''}")
@@ -309,39 +309,39 @@ def main():
     insights = generate_streaming_insights(data_files)
     
     # Create comprehensive report
-    report = create_analysis_report(data_files, insights)
+    create_analysis_report(data_files, insights)
     
     # Display summary
     print(f"\n{'='*70}")
     print("🎯 ANALYSIS SUMMARY")
     print(f"{'='*70}")
     
-    print(f"\n📊 Data Overview:")
+    print("\n📊 Data Overview:")
     print(f"   Sources analyzed: {insights['data_sources_analyzed']}")
     print(f"   Total records: {sum(len(df) for df in data_files.values())}")
     
     if insights['music_insights']:
-        print(f"\n🎶 Music Insights:")
+        print("\n🎶 Music Insights:")
         for insight in insights['music_insights']:
             print(f"   • {insight}")
     
     if insights['listening_insights']:
-        print(f"\n🎧 Listening Insights:")
+        print("\n🎧 Listening Insights:")
         for insight in insights['listening_insights']:
             print(f"   • {insight}")
     
     if insights['quality_insights']:
-        print(f"\n🔍 Quality Insights:")
+        print("\n🔍 Quality Insights:")
         for insight in insights['quality_insights']:
             print(f"   • {insight}")
     
-    print(f"\n💡 Next Steps:")
-    print(f"   1. Review detailed report: data/streaming_analysis_report.json")
-    print(f"   2. Install advanced libraries for forecasting: pip install statsmodels darts")
-    print(f"   3. Run advanced forecasting analysis")
-    print(f"   4. Use insights to optimize your music discovery")
+    print("\n💡 Next Steps:")
+    print("   1. Review detailed report: data/streaming_analysis_report.json")
+    print("   2. Install advanced libraries for forecasting: pip install statsmodels darts")
+    print("   3. Run advanced forecasting analysis")
+    print("   4. Use insights to optimize your music discovery")
     
-    print(f"\n✅ Statistical analysis demonstration complete!")
+    print("\n✅ Statistical analysis demonstration complete!")
 
 
 if __name__ == "__main__":

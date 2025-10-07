@@ -13,7 +13,7 @@ from statistical_analysis import (
 )
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 def create_realistic_streaming_data():
@@ -151,21 +151,23 @@ def test_forecasting_engine():
     if engine.available_models['auto_arima']:
         darts_results = engine.fit_darts_models(ts)
         for model_name, result in darts_results.items():
-            if 'error' not in result and result.get('success', False):
+            if isinstance(result, dict) and 'error' not in result and result.get('success', False):
                 mae_val = result['metrics']['mae']
                 print(f"   ✅ Darts {model_name}: MAE={mae_val:.2f}")
             else:
-                print(f"   ❌ Darts {model_name}: {result.get('error', 'Failed')}")
+                error_msg = result if isinstance(result, str) else result.get('error', 'Failed') if isinstance(result, dict) else 'Failed'
+                print(f"   ❌ Darts {model_name}: {error_msg}")
     
     # Test sklearn models
     if engine.available_models['random_forest']:
         sklearn_results = engine.fit_sklearn_models(ts)
         for model_name, result in sklearn_results.items():
-            if 'error' not in result and result.get('success', False):
+            if isinstance(result, dict) and 'error' not in result and result.get('success', False):
                 mae_val = result['metrics']['mae']
                 print(f"   ✅ Sklearn {model_name}: MAE={mae_val:.2f}")
             else:
-                print(f"   ❌ Sklearn {model_name}: {result.get('error', 'Failed')}")
+                error_msg = result if isinstance(result, str) else result.get('error', 'Failed') if isinstance(result, dict) else 'Failed'
+                print(f"   ❌ Sklearn {model_name}: {error_msg}")
     
     # Test forecasting
     print("\n🔮 Testing forecast generation...")
@@ -173,12 +175,13 @@ def test_forecasting_engine():
     
     forecast_count = 0
     for model_name, forecast in forecasts.items():
-        if 'error' not in forecast and 'forecast' in forecast:
+        if isinstance(forecast, dict) and 'error' not in forecast and 'forecast' in forecast:
             forecast_count += 1
             forecast_values = forecast['forecast']
             print(f"   ✅ {model_name}: {len(forecast_values)} forecasts, mean={np.mean(forecast_values):.1f}")
         else:
-            print(f"   ❌ {model_name}: {forecast.get('error', 'No forecast generated')}")
+            error_msg = forecast if isinstance(forecast, str) else forecast.get('error', 'No forecast generated') if isinstance(forecast, dict) else 'No forecast generated'
+            print(f"   ❌ {model_name}: {error_msg}")
     
     print(f"\n📊 Successfully generated {forecast_count} forecasts")
     
@@ -354,10 +357,10 @@ if __name__ == "__main__":
         print("="*60)
         
         print("\n📊 Test Summary:")
-        print(f"   ✅ Data quality analysis: Working")
+        print("   ✅ Data quality analysis: Working")
         print(f"   ✅ Forecasting engine: {len(forecasts)} models tested")
-        print(f"   ✅ Comprehensive pipeline: Working")
-        print(f"   ✅ Advanced demonstrations: Working")
+        print("   ✅ Comprehensive pipeline: Working")
+        print("   ✅ Advanced demonstrations: Working")
         
         print("\n💡 Next Steps:")
         print("   1. Run statistical analysis on your actual streaming data")

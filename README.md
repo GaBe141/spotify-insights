@@ -5,13 +5,15 @@ A comprehensive music analytics platform that combines data from **5+ sources** 
 ## 🌟 Features
 
 ### 📊 **Multi-Source Data Integration**
+
 - **Spotify Web API**: Personal top tracks, artists, and recently played
 - **Last.fm API**: Global charts and listening trends  
 - **MusicBrainz API**: Artist metadata, relationships, and discographies
 - **AudioDB API**: Rich artist profiles with biographies and multimedia
 - **Spotify Charts**: Real-time global streaming data (web scraping)
 
-### � **Advanced Statistical Analysis**
+### 📊 **Advanced Statistical Analysis**
+
 - **Data Quality Assessment**: Missing values, outliers, temporal consistency
 - **Time Series Forecasting**: ARIMA, SARIMA, Exponential Smoothing, Prophet
 - **Anomaly Detection**: IQR, Z-score, and Isolation Forest methods
@@ -19,12 +21,14 @@ A comprehensive music analytics platform that combines data from **5+ sources** 
 - **Model Performance Evaluation**: MAE, RMSE, MAPE metrics
 
 ### 📈 **Forecasting Models**
+
 - **ARIMA/SARIMA**: Classical time series forecasting
 - **Darts Library**: Auto-ARIMA, Exponential Smoothing, Theta, Linear Regression
 - **Machine Learning**: Random Forest, Neural Networks (optional)
 - **Prophet**: Facebook's forecasting tool (optional)
 
 ### 🎨 **Advanced Visualizations**
+
 - Interactive dashboards with Plotly
 - Statistical quality reports
 - Forecasting charts with confidence intervals
@@ -32,6 +36,7 @@ A comprehensive music analytics platform that combines data from **5+ sources** 
 - Anomaly detection visualizations
 
 ### 🔒 **Enterprise Security**
+
 - Secure credential management with validation
 - Environment-based configuration
 - Automatic security scanning
@@ -40,6 +45,7 @@ A comprehensive music analytics platform that combines data from **5+ sources** 
 ## 🚀 Quick Start
 
 ### 1. Installation
+
 ```bash
 git clone https://github.com/yourusername/spotify-insights.git
 cd spotify-insights
@@ -50,12 +56,14 @@ pip install -r requirements.txt
 ```
 
 ### 2. Configuration
+
 ```bash
 # Run security setup (creates .env template)
 python validate_security.py
 ```
 
 Edit the generated `.env` file with your API credentials:
+
 ```env
 # Spotify API (Required)
 SPOTIFY_CLIENT_ID=your_spotify_client_id
@@ -70,6 +78,7 @@ AUDIODB_API_KEY=123
 ```
 
 ### 3. Basic Analysis
+
 ```bash
 # Simple demonstration with working APIs
 python simple_multi_source_demo.py
@@ -79,6 +88,7 @@ python demo_statistical_analysis.py
 ```
 
 ### 4. Advanced Analytics
+
 ```bash
 # Install advanced forecasting libraries (optional)
 pip install statsmodels darts scikit-learn plotly
@@ -92,7 +102,7 @@ python advanced_streaming_analytics.py
 
 ## 📁 Project Structure
 
-```
+```text
 spotify-insights/
 ├── src/                          # Core modules
 │   ├── auth.py                  # Authentication handling
@@ -112,6 +122,7 @@ spotify-insights/
 ## 🎯 Usage Examples
 
 ### Multi-Source Data Collection
+
 ```python
 from src.multi_source_main import MultiSourceSpotifyAnalyzer
 
@@ -121,6 +132,7 @@ insights = analyzer.analyze_cross_platform_insights()
 ```
 
 ### Statistical Analysis and Forecasting
+
 ```python
 from src.statistical_analysis import StreamingDataQualityAnalyzer, StreamingForecastingEngine
 
@@ -135,6 +147,7 @@ forecasts = forecasting_engine.generate_forecasts(ts, horizon=30)
 ```
 
 ### Advanced Analytics Pipeline
+
 ```python
 from advanced_streaming_analytics import AdvancedStreamingAnalytics
 
@@ -145,6 +158,7 @@ report_path = analytics.run_complete_analysis()
 ## 📊 Available Analyses
 
 ### 🔍 **Data Quality Assessment**
+
 - **Missing Value Analysis**: Identify and quantify data gaps
 - **Outlier Detection**: Multiple statistical methods for anomaly detection
 - **Temporal Consistency**: Check for irregular time intervals and gaps
@@ -152,6 +166,7 @@ report_path = analytics.run_complete_analysis()
 - **Quality Scoring**: Overall data quality metrics (0-100)
 
 ### 📈 **Forecasting Capabilities**
+
 - **Short-term Forecasts**: 1-30 day predictions
 - **Confidence Intervals**: Statistical uncertainty quantification
 - **Model Comparison**: Automatic best model selection
@@ -159,6 +174,7 @@ report_path = analytics.run_complete_analysis()
 - **Seasonal Analysis**: Weekly/monthly pattern recognition
 
 ### 🎵 **Music-Specific Insights**
+
 - **Listening Pattern Analysis**: Consistency, variety, discovery rates
 - **Viral Content Detection**: Unusual streaming spikes
 - **Cross-Platform Comparison**: Personal vs global trends
@@ -181,6 +197,7 @@ report_path = analytics.run_complete_analysis()
 ## 📦 Dependencies
 
 ### Core Requirements (Always Installed)
+
 - `pandas>=2.2.2` - Data manipulation and analysis
 - `requests>=2.32.0` - API communication
 - `spotipy>=2.23.0` - Spotify API wrapper
@@ -189,6 +206,7 @@ report_path = analytics.run_complete_analysis()
 - `python-dotenv>=1.0.1` - Environment management
 
 ### Statistical Analysis (Optional - Enhanced Features)
+
 - `statsmodels>=0.14.0` - Time series analysis (ARIMA, SARIMA)
 - `darts>=0.27.0` - Advanced forecasting models
 - `scikit-learn>=1.3.0` - Machine learning algorithms
@@ -196,6 +214,7 @@ report_path = analytics.run_complete_analysis()
 - `plotly>=5.17.0` - Interactive visualizations
 
 ### Research-Grade Features (Optional - Large Downloads)
+
 - `prophet>=1.1.5` - Facebook's forecasting tool
 - `tensorflow>=2.13.0` - Deep learning models
 - `torch>=2.0.0` - PyTorch for neural networks
@@ -203,6 +222,7 @@ report_path = analytics.run_complete_analysis()
 ## 📈 Sample Outputs
 
 ### Quality Analysis Report
+
 ```json
 {
   "data_quality": {
@@ -220,6 +240,7 @@ report_path = analytics.run_complete_analysis()
 ```
 
 ### Forecasting Results
+
 ```json
 {
   "forecasting": {
@@ -234,7 +255,8 @@ report_path = analytics.run_complete_analysis()
 ```
 
 ### Multi-Source Insights
-```
+
+```text
 🎵 Multi-Source Analysis Results:
 ✅ Analyzed 10 top artists across 3 platforms
 📊 Found 3 countries represented (GB most common)
@@ -261,6 +283,7 @@ report_path = analytics.run_complete_analysis()
    - Visit [AudioDB](https://www.theaudiodb.com/api_guide.php) for premium
 
 ### Statistical Analysis Customization
+
 ```python
 # Customize forecasting models
 forecasting_engine = StreamingForecastingEngine()
@@ -307,9 +330,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Darts** for advanced time series forecasting
 - **Statsmodels** for statistical analysis tools
 
----
+----
 
-🎵 **Ready to discover insights in your music streaming data?** 
+🎵 **Ready to discover insights in your music streaming data?**
 
 Start with basic setup: `python validate_security.py` → `python simple_multi_source_demo.py`
 

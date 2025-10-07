@@ -9,10 +9,10 @@ import json
 from datetime import datetime, timedelta
 from typing import Dict, Any
 
-# Add src directory to path
+# Add src directory to path (runtime convenience)
 sys.path.append(str(Path(__file__).parent / "src"))
 
-from trending_schema import (
+from src.trending_schema import (
     TrendingSchema, TrendCategory, TrendDirection
 )
 

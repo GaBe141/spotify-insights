@@ -13,11 +13,11 @@ import numpy as np
 # Add src directory to path
 sys.path.append(str(Path(__file__).parent / "src"))
 
-from statistical_analysis import (
+from src.statistical_analysis import (
     StreamingDataQualityAnalyzer,
     StreamingForecastingEngine
 )
-from statistical_viz import StatisticalVisualizationEngine, visualize_comprehensive_results
+from src.statistical_viz import StatisticalVisualizationEngine, visualize_comprehensive_results
 
 warnings.filterwarnings('ignore')
 
