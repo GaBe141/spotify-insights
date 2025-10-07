@@ -1,27 +1,71 @@
-# Spotify Insights
+# Spotify Insights 🎵
 
-A small Python project to explore your Spotify listening data: top artists/tracks, recently played, genres, and audio features. Uses Spotipy for auth and data access.
+A comprehensive Python project to analyze your Spotify listening data with advanced visualizations and global trend comparisons. Features secure API key management, deep musical taste analysis, and integration with Last.fm for global music trends.
 
-## Quick start
+## 🔐 Security First
 
-1. Create a Spotify app at <https://developer.spotify.com/dashboard> and note your Client ID/Secret.
-2. Add this Redirect URI in the dashboard (exact match):
-   - `http://127.0.0.1:8888/callback`
-3. Copy `.env.example` to `.env` and fill in your credentials.
-4. Create/activate a virtualenv and install deps.
-5. Run the sample script and log in.
+This project implements enterprise-grade security practices:
+- **Secure credential management** with comprehensive validation
+- **Environment-based configuration** (never hardcode API keys)
+- **Automatic security scanning** to prevent credential exposure
+- **Git safety** with comprehensive .gitignore patterns
 
-## Setup (Windows PowerShell)
+## ⚡ Quick Start
 
-```powershell
-# From the repo root
-python -m venv .venv
-.\.venv\Scripts\Activate
-pip install -r requirements.txt
+1. **Get API credentials:**
+   - Spotify: [Create app](https://developer.spotify.com/dashboard)
+   - Last.fm (optional): [Get API key](https://www.last.fm/api/account/create)
 
-# First run will open a browser for Spotify login
-python -m src.main
-```
+2. **Set up environment:**
+   ```powershell
+   # Clone and navigate to project
+   cd spotify-insights
+   
+   # Create virtual environment
+   python -m venv .venv
+   .\.venv\Scripts\Activate
+   
+   # Install dependencies
+   pip install -r requirements.txt
+   
+   # Run security setup (creates .env template)
+   python validate_security.py
+   ```
+
+3. **Configure credentials:**
+   - Edit `.env` file with your API credentials
+   - Set Redirect URI: `http://127.0.0.1:8888/callback`
+
+4. **Validate and run:**
+   ```powershell
+   # Validate security configuration
+   python validate_security.py
+   
+   # Run basic analysis
+   python -m src.main
+   
+   # Run advanced analysis with global trends
+   python -m src.lastfm_main
+   ```
+
+## 🎯 Features
+
+### Core Analysis
+- **Authentication**: Secure OAuth flow with fallback handling
+- **Data Collection**: Top artists/tracks, recently played, listening history
+- **Visualizations**: Bar charts, heatmaps, timeline analysis
+
+### Advanced Analytics
+- **Musical Maturity Score**: Quantify your taste sophistication
+- **Genre Evolution**: Track how your preferences change over time
+- **Seasonal Patterns**: Discover mood-based listening cycles
+- **Age Analysis**: See how your musical age compares to chronological age
+
+### Global Trends Integration
+- **Last.fm Integration**: Compare your taste with global trends
+- **Mainstream Analysis**: Calculate your mainstream vs. niche score
+- **Discovery Insights**: Find how adventurous your listening is
+- **Cultural Context**: Understand your place in the musical landscape
 
 ## What's included
 

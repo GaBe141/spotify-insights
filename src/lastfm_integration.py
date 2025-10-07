@@ -1,12 +1,12 @@
 """Last.fm API integration for global music trends and historical data."""
 
-import os
 import requests
 import pandas as pd
 from typing import Dict, List, Optional
 from pathlib import Path
 import time
 import json
+from .config import get_config
 
 BASE_URL = "http://ws.audioscrobbler.com/2.0/"
 
@@ -197,16 +197,17 @@ class LastFmAPI:
 
 
 def get_lastfm_client() -> Optional[LastFmAPI]:
-    """Get authenticated Last.fm client."""
-    api_key = os.getenv("LASTFM_API_KEY")
+    """Get authenticated Last.fm client using secure configuration."""
+    config_manager = get_config()
+    lastfm_config = config_manager.get_lastfm_config()
     
-    if not api_key or api_key == "your_lastfm_api_key_here":
-        print("❌ Last.fm API key not set!")
+    if not lastfm_config:
+        print("❌ Last.fm API key not configured!")
         print("Get a free API key from: https://www.last.fm/api/account/create")
         print("Then add it to your .env file as LASTFM_API_KEY=your_key_here")
         return None
     
-    return LastFmAPI(api_key)
+    return LastFmAPI(lastfm_config['api_key'])
 
 
 def fetch_global_trends() -> Dict[str, pd.DataFrame]:
