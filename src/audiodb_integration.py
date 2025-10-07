@@ -4,7 +4,11 @@ import requests
 import pandas as pd
 from typing import Dict, List, Optional
 import time
-from .config import get_config
+try:
+    from .config import get_config
+except ImportError:
+    # Fallback for standalone execution
+    pass
 
 BASE_URL = "https://www.theaudiodb.com/api/v1/json"
 
@@ -46,7 +50,7 @@ class AudioDBAPI:
     
     def search_artist(self, artist_name: str) -> Optional[Dict]:
         """Search for an artist by name."""
-        result = self._make_request(f"search.php?s={artist_name}")
+        result = self._make_request(f"search.php", {"s": artist_name})
         
         if result and result.get('artists'):
             return result['artists'][0]
@@ -81,7 +85,7 @@ class AudioDBAPI:
     
     def get_artist_albums(self, artist_name: str) -> List[Dict]:
         """Get all albums for an artist."""
-        result = self._make_request(f"searchalbum.php?s={artist_name}")
+        result = self._make_request("searchalbum.php", {"s": artist_name})
         
         if result and result.get('album'):
             albums = []
@@ -104,7 +108,7 @@ class AudioDBAPI:
     
     def get_artist_tracks(self, artist_name: str) -> List[Dict]:
         """Get popular tracks for an artist."""
-        result = self._make_request(f"track.php?m={artist_name}")
+        result = self._make_request("track.php", {"m": artist_name})
         
         if result and result.get('track'):
             tracks = []
@@ -228,15 +232,12 @@ class AudioDBAPI:
 
 def get_audiodb_client() -> AudioDBAPI:
     """Get AudioDB API client with optional API key."""
-    config_manager = get_config()
-    
-    # Try to get API key from config (optional)
+    # Try to get API key from environment (optional)
     try:
-        # AudioDB API key is optional - using environment variable if available
         import os
         api_key = os.getenv('AUDIODB_API_KEY')
         return AudioDBAPI(api_key)
-    except:
+    except Exception:
         return AudioDBAPI()
 
 
