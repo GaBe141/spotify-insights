@@ -5,7 +5,7 @@ from pathlib import Path
 import json
 import warnings
 from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional
+from typing import Dict, Any
 
 import pandas as pd
 import numpy as np
@@ -15,8 +15,7 @@ sys.path.append(str(Path(__file__).parent / "src"))
 
 from statistical_analysis import (
     StreamingDataQualityAnalyzer,
-    StreamingForecastingEngine,
-    run_comprehensive_analysis
+    StreamingForecastingEngine
 )
 from statistical_viz import StatisticalVisualizationEngine, visualize_comprehensive_results
 
@@ -142,7 +141,6 @@ class AdvancedStreamingAnalytics:
         streams = np.maximum(streams, 100)  # Minimum streams
         
         # Related metrics
-        plays = streams * np.random.uniform(0.8, 0.95, 180)
         listeners = streams * np.random.uniform(0.3, 0.6, 180)
         skips = streams * np.random.uniform(0.1, 0.3, 180)
         saves = streams * np.random.uniform(0.05, 0.15, 180)
@@ -196,7 +194,7 @@ class AdvancedStreamingAnalytics:
                 missing_count = sum(quality_report['basic_stats']['missing_values'].values())
                 rec_count = len(quality_report.get('recommendations', []))
                 
-                print(f"   ✅ Quality analysis complete")
+                print("   ✅ Quality analysis complete")
                 print(f"      Missing values: {missing_count}")
                 print(f"      Recommendations: {rec_count}")
                 
@@ -236,7 +234,7 @@ class AdvancedStreamingAnalytics:
                     col_results = {'preparation': prep_info, 'models': {}, 'forecasts': {}}
                     
                     # Fit models
-                    print(f"         Fitting models...")
+                    print("         Fitting models...")
                     
                     # ARIMA
                     if self.forecasting_engine.available_models['arima']:
@@ -257,7 +255,7 @@ class AdvancedStreamingAnalytics:
                             print(f"         ⚠️ Darts models failed: {e}")
                     
                     # Generate forecasts
-                    print(f"         Generating forecasts...")
+                    print("         Generating forecasts...")
                     forecasts = self.forecasting_engine.generate_forecasts(ts, horizon=14)
                     col_results['forecasts'] = forecasts
                     
@@ -447,7 +445,7 @@ class AdvancedStreamingAnalytics:
         summary_file = output_path / "analysis_summary.txt"
         self._create_text_summary(comprehensive_results, summary_file)
         
-        print(f"\n🎯 Comprehensive analysis complete!")
+        print("\n🎯 Comprehensive analysis complete!")
         print(f"   📁 Report directory: {output_path}")
         print(f"   📄 Main results: {results_file.name}")
         print(f"   📊 Summary: {summary_file.name}")
