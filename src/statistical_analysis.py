@@ -142,7 +142,7 @@ class StreamingDataQualityAnalyzer:
                 'frequency_analysis': {
                     'median_interval': time_diffs.median().total_seconds(),
                     'std_interval': time_diffs.std().total_seconds(),
-                    'irregular_intervals': (time_diffs.std() / time_diffs.median()).total_seconds()
+                    'irregular_intervals': (time_diffs.std() / time_diffs.median())
                 },
                 'gaps_detected': len(time_diffs[time_diffs > time_diffs.median() * 2])
             })
