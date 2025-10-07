@@ -561,18 +561,21 @@ class StreamingForecastingEngine:
         
         # Darts forecasts
         if DARTS_AVAILABLE:
-            darts_ts = TimeSeries.from_series(ts)
-            for model_name, model in self.models.items():
-                if 'darts_' in model_name:
-                    try:
-                        forecast = model.predict(horizon)
-                        forecasts[model_name] = {
-                            'forecast': forecast.values().flatten().tolist(),
-                            'timestamps': [t.isoformat() for t in forecast.time_index],
-                            'model_type': 'darts'
-                        }
-                    except Exception as e:
-                        forecasts[model_name] = {'error': str(e)}
+            try:
+                TimeSeries.from_series(ts)  # Validate conversion works
+                for model_name, model in self.models.items():
+                    if 'darts_' in model_name:
+                        try:
+                            forecast = model.predict(horizon)
+                            forecasts[model_name] = {
+                                'forecast': forecast.values().flatten().tolist(),
+                                'timestamps': [t.isoformat() for t in forecast.time_index],
+                                'model_type': 'darts'
+                            }
+                        except Exception as e:
+                            forecasts[model_name] = {'error': str(e)}
+            except Exception:
+                pass
         
         # Sklearn forecasts (more complex due to autoregressive nature)
         for model_name, model in self.models.items():
