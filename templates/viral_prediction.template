@@ -1,0 +1,20 @@
+VIRAL PREDICTION ALERT
+
+Track: {{ track_name }} by {{ artist }}
+Viral Probability: {{ viral_probability }}%
+Confidence: {{ confidence }}%
+Predicted Peak: {{ predicted_peak_date }}
+
+Key Factors:
+{% for factor in key_factors %}
+• {{ factor }}
+{% endfor %}
+
+{% if risk_factors %}
+Risk Factors:
+{% for risk in risk_factors %}
+⚠️ {{ risk }}
+{% endfor %}
+{% endif %}
+
+This track is likely to break mainstream soon!

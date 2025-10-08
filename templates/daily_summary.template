@@ -1,0 +1,15 @@
+Daily Music Trends - {{ date }}
+
+Top {{ track_count }} trending tracks:
+
+{% for track in tracks %}
+{{ loop.index }}. {{ track.track_name }} by {{ track.artist }}
+   Platform: {{ track.platform }} | Score: {{ track.score }}
+   {% if track.growth_rate %}Growth: {{ track.growth_rate }}x{% endif %}
+
+{% endfor %}
+
+Cross-platform hits: {{ cross_platform_count }}
+New discoveries: {{ new_discoveries }}
+
+Stay ahead of the trends!

@@ -5,6 +5,7 @@ __pycache__/
 venv/
 .env
 .env.*
+.env.enhanced
 .cache
 .idea/
 .vscode/
@@ -15,9 +16,37 @@ env_data
 *_secrets
 credentials.*
 config.ini
+config/*_config.json
+!config/*.template
+!config/*.example
 
 # Data
 /data/*
+
+# Enhanced Music Discovery System Files
+*.db
+*.sqlite
+*.sqlite3
+music_trends.db
+enhanced_music_trends.db
+*.log
+logs/
+setup.log
+backups/
+*.backup
+*.bak
+exports/
+templates/*.txt
+!templates/*.template
+data/reports/
+data/trends/
+data/visualizations/
+
+# Generated and temporary files
+*.temp
+temp/
+tmp/
+*.tmp
 !data/.gitkeep
 
 # Notebooks

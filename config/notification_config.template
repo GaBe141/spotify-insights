@@ -1,0 +1,45 @@
+{
+  "enabled": true,
+  "channels": {
+    "email": {
+      "enabled": false,
+      "smtp_server": "YOUR_SMTP_SERVER",
+      "port": 587,
+      "username": "YOUR_EMAIL_USERNAME",
+      "password": "YOUR_EMAIL_PASSWORD",
+      "from_address": "music-discovery@yourdomain.com",
+      "recipients": ["your-email@example.com"]
+    },
+    "slack": {
+      "enabled": false,
+      "webhook_url": "YOUR_SLACK_WEBHOOK_URL",
+      "channel": "#music-trends",
+      "username": "Music Discovery Bot"
+    },
+    "discord": {
+      "enabled": false,
+      "webhook_url": "YOUR_DISCORD_WEBHOOK_URL",
+      "username": "Music Discovery"
+    },
+    "webhook": {
+      "enabled": false,
+      "url": "YOUR_WEBHOOK_URL",
+      "headers": {},
+      "timeout": 30
+    },
+    "console": {
+      "enabled": true,
+      "log_level": "INFO"
+    }
+  },
+  "rules": {
+    "viral_prediction_threshold": 0.8,
+    "daily_summary_time": "09:00",
+    "rate_limit_per_hour": 50,
+    "cooldown_minutes": 60
+  },
+  "templates": {
+    "use_templates": true,
+    "template_directory": "templates"
+  }
+}

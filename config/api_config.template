@@ -1,0 +1,44 @@
+{
+  "social_media_apis": {
+    "tiktok": {
+      "api_key": "YOUR_TIKTOK_API_KEY",
+      "api_secret": "YOUR_TIKTOK_API_SECRET",
+      "access_token": "YOUR_TIKTOK_ACCESS_TOKEN",
+      "rate_limit": {"requests_per_minute": 60, "requests_per_hour": 1000},
+      "endpoints": {
+        "trending": "https://api.tiktok.com/v1/trending",
+        "search": "https://api.tiktok.com/v1/search"
+      },
+      "priority": "high"
+    },
+    "youtube": {
+      "api_key": "YOUR_YOUTUBE_API_KEY",
+      "rate_limit": {"requests_per_minute": 100, "requests_per_day": 10000},
+      "endpoints": {
+        "trending": "https://www.googleapis.com/youtube/v3/videos",
+        "search": "https://www.googleapis.com/youtube/v3/search"
+      },
+      "priority": "high"
+    },
+    "twitter": {
+      "bearer_token": "YOUR_TWITTER_BEARER_TOKEN",
+      "api_key": "YOUR_TWITTER_API_KEY",
+      "api_secret": "YOUR_TWITTER_API_SECRET",
+      "access_token": "YOUR_TWITTER_ACCESS_TOKEN",
+      "access_token_secret": "YOUR_TWITTER_ACCESS_TOKEN_SECRET",
+      "rate_limit": {"requests_per_minute": 300, "requests_per_15min": 450},
+      "priority": "medium"
+    }
+  },
+  "resilience": {
+    "retry_attempts": 3,
+    "backoff_factor": 1.5,
+    "circuit_breaker_threshold": 5,
+    "circuit_breaker_timeout": 300
+  },
+  "caching": {
+    "enabled": true,
+    "ttl_seconds": 3600,
+    "max_cache_size": 1000
+  }
+}
