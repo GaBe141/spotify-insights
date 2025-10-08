@@ -7,11 +7,13 @@ This project now includes several enhancements to make your VS Code to GitHub wo
 ### PowerShell Scripts
 
 1. **Quick Push** - Stage, commit, and push in one command:
+
    ```powershell
    .\quick-push.ps1 "Your commit message"
    ```
 
 2. **Git Helpers** - Load helpful functions:
+
    ```powershell
    . .\git-helpers.ps1
    Quick-Status    # Show repo status

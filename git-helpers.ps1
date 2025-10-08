@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 # Git workflow helper scripts
 
-function Quick-Status {
+function Show-GitStatus {
     Write-Host "📊 Repository Status:" -ForegroundColor Cyan
     git status --short
     Write-Host ""
@@ -12,7 +12,7 @@ function Quick-Status {
     git log --oneline -5
 }
 
-function Quick-Pull {
+function Sync-GitRepository {
     Write-Host "⬇️  Pulling latest changes..." -ForegroundColor Yellow
     git pull
     if ($LASTEXITCODE -eq 0) {
@@ -22,7 +22,7 @@ function Quick-Pull {
     }
 }
 
-function Quick-Branch {
+function New-GitBranch {
     param([string]$branchName)
     
     if (-not $branchName) {
@@ -41,5 +41,9 @@ function Quick-Branch {
     }
 }
 
-# Export functions
-Export-ModuleMember -Function Quick-Status, Quick-Pull, Quick-Branch
+# Create aliases for backward compatibility
+Set-Alias -Name Quick-Status -Value Show-GitStatus
+Set-Alias -Name Quick-Pull -Value Sync-GitRepository
+Set-Alias -Name Quick-Branch -Value New-GitBranch
+
+# Functions are automatically available when script is dot-sourced
