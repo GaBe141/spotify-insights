@@ -12,14 +12,19 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from typing import Dict, List, Any
 
-# Add src to path
-sys.path.append(str(Path(__file__).parent / "src"))
+# Add necessary paths
+sys.path.append(str(Path(__file__).parent.parent))
 
 # Import all enhanced components
-from resilience import EnhancedResilience
-from data_store import EnhancedMusicDataStore
-from advanced_analytics import MusicTrendAnalytics
-from notification_service import EnhancedNotificationService
+from core.resilience import EnhancedResilience
+from core.data_store import EnhancedMusicDataStore
+from analytics.advanced_analytics import MusicTrendAnalytics
+from core.notification_service import (
+    EnhancedNotificationService, 
+    NotificationMessage, 
+    NotificationPriority, 
+    NotificationChannel
+)
 
 class EnhancedMusicDiscoveryApp:
     """Main application orchestrating all enhanced components."""
@@ -84,7 +89,7 @@ class EnhancedMusicDiscoveryApp:
         log_level = getattr(logging, log_config.get("level", "INFO"))
         log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         
-        handlers = [logging.StreamHandler(sys.stdout)]
+        handlers: List[logging.Handler] = [logging.StreamHandler(sys.stdout)]
         
         if log_config.get("file_logging", True):
             log_file = logs_dir / f"music_discovery_{datetime.now().strftime('%Y%m%d')}.log"
@@ -100,7 +105,7 @@ class EnhancedMusicDiscoveryApp:
         """Run a complete discovery cycle with all enhanced features."""
         self.logger.info("🚀 Starting enhanced music discovery cycle")
         
-        cycle_results = {
+        cycle_results: Dict[str, Any] = {
             "timestamp": datetime.now().isoformat(),
             "discoveries": [],
             "analytics": {},
@@ -144,9 +149,12 @@ class EnhancedMusicDiscoveryApp:
             cycle_results["errors"].append(error_msg)
             
             # Send error notification
-            await self.notifications.send_notification(
-                "system_alert",
-                {
+            message = NotificationMessage(
+                title="Discovery Cycle Error",
+                content=f"Discovery cycle failed: {str(e)}",
+                priority=NotificationPriority.HIGH,
+                channels=[NotificationChannel.EMAIL, NotificationChannel.SLACK],
+                data={
                     "alert_type": "Discovery Cycle Error",
                     "issue_description": str(e),
                     "severity": "HIGH",
@@ -154,6 +162,7 @@ class EnhancedMusicDiscoveryApp:
                     "system_status": "DEGRADED"
                 }
             )
+            await self.notifications.send_notification(message)
         
         return cycle_results
     
@@ -297,9 +306,12 @@ class EnhancedMusicDiscoveryApp:
         
         for prediction in viral_predictions:
             if prediction.get("viral_probability", 0) > 0.8:  # High confidence threshold
-                await self.notifications.send_notification(
-                    "viral_prediction",
-                    {
+                message = NotificationMessage(
+                    title=f"Viral Prediction: {prediction.get('track_name', 'Unknown')}",
+                    content=f"High viral potential detected for {prediction.get('track_name', 'Unknown')} by {prediction.get('artist', 'Unknown')}",
+                    priority=NotificationPriority.HIGH,
+                    channels=[NotificationChannel.EMAIL, NotificationChannel.PUSH],
+                    data={
                         "track_name": prediction.get("track_name", "Unknown"),
                         "artist": prediction.get("artist", "Unknown"),
                         "viral_probability": f"{prediction.get('viral_probability', 0) * 100:.1f}",
@@ -309,13 +321,17 @@ class EnhancedMusicDiscoveryApp:
                         "risk_factors": prediction.get("risk_factors", [])
                     }
                 )
+                await self.notifications.send_notification(message)
                 notifications_sent += 1
         
         # Daily summary notification
         if datetime.now().hour == 9:  # Send daily summary at 9 AM
-            await self.notifications.send_notification(
-                "daily_summary",
-                {
+            message = NotificationMessage(
+                title="Daily Music Discovery Summary",
+                content=f"Found {len(viral_predictions)} trending tracks today",
+                priority=NotificationPriority.MEDIUM,
+                channels=[NotificationChannel.EMAIL],
+                data={
                     "date": datetime.now().strftime("%Y-%m-%d"),
                     "track_count": len(viral_predictions),
                     "tracks": viral_predictions[:10],  # Top 10
@@ -323,6 +339,7 @@ class EnhancedMusicDiscoveryApp:
                     "new_discoveries": len([p for p in viral_predictions if p.get("source_confidence", 0) > 0.9])
                 }
             )
+            await self.notifications.send_notification(message)
             notifications_sent += 1
         
         return notifications_sent

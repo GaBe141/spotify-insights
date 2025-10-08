@@ -62,17 +62,19 @@ class SocialMusicMetrics:
     playlist_adds: int = 0
     
     # Timing metrics
-    timestamp: datetime = None
+    timestamp: Optional[datetime] = None
     trend_velocity: float = 0.0  # Rate of growth
     viral_stage: ViralStage = ViralStage.UNDERGROUND
     
     # Demographics
     primary_age_group: str = "unknown"  # "13-17", "18-24", "25-34", etc.
-    top_regions: List[str] = None
+    top_regions: Optional[List[str]] = None
     
     def __post_init__(self):
         if self.timestamp is None:
             self.timestamp = datetime.now()
+        if self.top_regions is None:
+            self.top_regions = []
         if self.top_regions is None:
             self.top_regions = []
 
@@ -114,8 +116,8 @@ class TikTokMusicAPI:
         endpoint = f"{self.base_url}/research/music/trending/"
         
         params = {
-            'region_code': region,
-            'count': count,
+            'region_code': str(region),
+            'count': str(count),
             'fields': 'music_id,title,artist,play_count,video_count,trend_score'
         }
         
@@ -138,7 +140,7 @@ class TikTokMusicAPI:
         endpoint = f"{self.base_url}/research/music/analytics/"
         
         params = {
-            'sound_id': sound_id,
+            'sound_id': str(sound_id),
             'fields': 'video_count,play_count,share_count,hashtag_count,age_distribution,region_distribution'
         }
         

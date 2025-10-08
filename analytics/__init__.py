@@ -26,11 +26,12 @@ __version__ = "2.0.0"
 # Import key analytics classes
 try:
     from .advanced_analytics import MusicTrendAnalytics
-    from .statistical_analysis import StatisticalAnalyzer
+    from .statistical_analysis import StreamingDataQualityAnalyzer, StreamingForecastingEngine
     
     __all__ = [
         "MusicTrendAnalytics",
-        "StatisticalAnalyzer"
+        "StreamingDataQualityAnalyzer",
+        "StreamingForecastingEngine"
     ]
 except ImportError:
     __all__ = []

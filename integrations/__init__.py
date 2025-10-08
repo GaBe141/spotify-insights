@@ -27,11 +27,11 @@ __version__ = "2.0.0"
 # Import key integration classes
 try:
     from .api_config import APIConfig
-    from .social_discovery_engine import SocialDiscoveryEngine
+    from .social_discovery_engine import SocialMusicDiscoveryEngine
     
     __all__ = [
         "APIConfig",
-        "SocialDiscoveryEngine"
+        "SocialMusicDiscoveryEngine"
     ]
 except ImportError:
     __all__ = []

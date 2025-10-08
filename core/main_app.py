@@ -7,12 +7,12 @@ import asyncio
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
-from api_config import SocialAPIManager
-from social_discovery_engine import SocialMusicDiscoveryEngine
-from extended_platforms import ExtendedSocialDiscoveryEngine
-from trending_schema import TrendingSchema
+from integrations.api_config import SocialAPIManager
+from integrations.social_discovery_engine import SocialMusicDiscoveryEngine
+from integrations.extended_platforms import ExtendedSocialDiscoveryEngine
+from integrations.trending_schema import TrendingSchema
 
 
 class ComprehensiveMusicDiscoveryApp:
@@ -32,9 +32,9 @@ class ComprehensiveMusicDiscoveryApp:
         self.trending_schema = TrendingSchema()
         
         # Application state
-        self.last_discovery_run = None
-        self.discovery_cache = {}
-        self.analytics_data = []
+        self.last_discovery_run: Optional[datetime] = None
+        self.discovery_cache: Dict[str, Any] = {}
+        self.analytics_data: List[Any] = []
         
         self._initialize_engines()
     
@@ -310,7 +310,7 @@ class ComprehensiveMusicDiscoveryApp:
         return analytics
     
     def save_discovery_report(self, discovery_results: Dict[str, Any], 
-                            custom_filename: str = None) -> str:
+                            custom_filename: Optional[str] = None) -> str:
         """Save comprehensive discovery report."""
         if custom_filename:
             filename = custom_filename
@@ -326,7 +326,7 @@ class ComprehensiveMusicDiscoveryApp:
         
         return str(filepath)
     
-    async def run_continuous_monitoring(self, interval_hours: int = 4, regions: List[str] = None):
+    async def run_continuous_monitoring(self, interval_hours: int = 4, regions: Optional[List[str]] = None):
         """Run continuous music discovery monitoring."""
         if regions is None:
             regions = ["US", "GB", "CA", "AU"]
@@ -460,7 +460,7 @@ async def main():
             
             elif choice == "5":
                 print("\n🔧 API Configuration...")
-                from api_config import setup_api_credentials
+                from integrations.api_config import setup_api_credentials
                 setup_api_credentials()
                 
                 # Reinitialize engines with new credentials
