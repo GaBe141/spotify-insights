@@ -110,9 +110,6 @@ class AudoraMusicDiscoveryDemo:
                     }
                 }
                 
-                # Run viral prediction
-                viral_analysis = self.analytics.detect_viral_patterns(track_profile)
-                
                 # Calculate viral score based on multiple factors
                 platform_avg = np.mean(list(track_profile['platform_scores'].values()))
                 social_momentum = (track_profile['social_signals']['mentions'] + 
@@ -177,7 +174,7 @@ class AudoraMusicDiscoveryDemo:
             print()
         
         # Identify trending patterns
-        print(f"\n🔥 TRENDING INSIGHTS:")
+        print("\n🔥 TRENDING INSIGHTS:")
         print(f"   • TikTok-Spotify correlation: {correlation_matrix['tiktok']['spotify']:.2f}")
         print(f"   • YouTube-Instagram synergy: {correlation_matrix['youtube']['instagram']:.2f}")
         print(f"   • Cross-platform momentum detected in {len(viral_candidates)} tracks")
