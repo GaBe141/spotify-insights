@@ -19,10 +19,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 # import seaborn as sns  # Commented out for faster loading
-import plotly.graph_objects as go
+import plotly.graph_objects as go  # type: ignore[import-untyped]
 # import plotly.express as px  # Commented out - not used
-from plotly.subplots import make_subplots
-import plotly.offline as pyo
+from plotly.subplots import make_subplots  # type: ignore[import-untyped]
+import plotly.offline as pyo  # type: ignore[import-untyped]
 from pathlib import Path
 # from datetime import datetime, timedelta  # Commented out - not used
 import warnings
@@ -36,8 +36,8 @@ sys.path.extend([
     str(PROJECT_ROOT / "integrations"),
 ])
 
-from advanced_analytics import MusicTrendAnalytics
-from statistical_analysis import StreamingDataQualityAnalyzer
+from advanced_analytics import MusicTrendAnalytics  # noqa: E402
+from statistical_analysis import StreamingDataQualityAnalyzer  # noqa: E402
 
 # Set beautiful styling
 plt.style.use('dark_background')

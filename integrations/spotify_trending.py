@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 import json
 from datetime import datetime, timedelta
-from typing import Dict, Any
+from typing import Dict, Any, TypedDict, Set, List
 
 # Add parent directory to path for module imports
 sys.path.extend([
@@ -50,11 +50,17 @@ class SpotifyTrendingIntegration:
             'spotify_lastfm_enriched.csv': self._extract_combined_popularity
         }
     
-    def load_and_process_data(self) -> Dict[str, Any]:
+    class LoadResults(TypedDict):
+        files_processed: int
+        items_added: int
+        categories_populated: Set[str]
+        processing_errors: List[str]
+
+    def load_and_process_data(self) -> "SpotifyTrendingIntegration.LoadResults":
         """Load all available data and populate trending schema."""
         print("📊 Loading Spotify data for trending analysis...")
         
-        results = {
+        results: SpotifyTrendingIntegration.LoadResults = {
             'files_processed': 0,
             'items_added': 0,
             'categories_populated': set(),
@@ -101,8 +107,9 @@ class SpotifyTrendingIntegration:
         for _, row in df.iterrows():
             if 'name' in row and 'popularity' in row:
                 # Use track name as ID, popularity as value
-                item_id = f"track_{row.get('id', row['name'].replace(' ', '_'))}"
-                name = row['name']
+                name_str = str(row['name'])
+                item_id = f"track_{row.get('id', name_str.replace(' ', '_'))}"
+                name = name_str
                 value = float(row['popularity'])
                 
                 # Add some temporal variation (simulate different time points)
@@ -136,8 +143,9 @@ class SpotifyTrendingIntegration:
         
         for _, row in df.iterrows():
             if 'name' in row and 'followers' in row:
-                item_id = f"artist_{row.get('id', row['name'].replace(' ', '_'))}"
-                name = row['name']
+                name_str = str(row['name'])
+                item_id = f"artist_{row.get('id', name_str.replace(' ', '_'))}"
+                name = name_str
                 value = float(row['followers'])
                 
                 # Simulate follower growth over time
@@ -174,8 +182,9 @@ class SpotifyTrendingIntegration:
         
         for _, row in df.iterrows():
             if 'name' in row and 'playcount' in row:
-                item_id = f"lastfm_track_{row['name'].replace(' ', '_')}"
-                name = f"{row['name']} - {row.get('artist', 'Unknown')}"
+                name_str = str(row['name'])
+                item_id = f"lastfm_track_{name_str.replace(' ', '_')}"
+                name = f"{name_str} - {row.get('artist', 'Unknown')}"
                 value = float(row['playcount'])
                 
                 # Simulate playcount evolution
@@ -211,8 +220,9 @@ class SpotifyTrendingIntegration:
         
         for _, row in df.iterrows():
             if 'name' in row and 'listeners' in row:
-                item_id = f"lastfm_artist_{row['name'].replace(' ', '_')}"
-                name = row['name']
+                name_str = str(row['name'])
+                item_id = f"lastfm_artist_{name_str.replace(' ', '_')}"
+                name = name_str
                 value = float(row['listeners'])
                 
                 # Simulate listener growth patterns
@@ -252,12 +262,13 @@ class SpotifyTrendingIntegration:
         track_counts = df['track_name'].value_counts()
         
         for track_name, play_count in track_counts.head(20).items():  # Top 20 most played
-            item_id = f"recent_track_{track_name.replace(' ', '_')}"
+            track_name_str = str(track_name)
+            item_id = f"recent_track_{track_name_str.replace(' ', '_')}"
             
             # Get artist info if available
             track_info = df[df['track_name'] == track_name].iloc[0]
             artist_name = track_info.get('artist_name', 'Unknown')
-            name = f"{track_name} - {artist_name}"
+            name = f"{track_name_str} - {artist_name}"
             
             # Use play count as trending value
             base_time = datetime.now() - timedelta(days=7)
@@ -290,8 +301,9 @@ class SpotifyTrendingIntegration:
         
         for _, row in df.iterrows():
             if 'name' in row:
-                item_id = f"enriched_artist_{row['name'].replace(' ', '_')}"
-                name = row['name']
+                name_str = str(row['name'])
+                item_id = f"enriched_artist_{name_str.replace(' ', '_')}"
+                name = name_str
                 
                 # Combine multiple metrics for trending value
                 spotify_followers = row.get('followers', 0)
@@ -331,14 +343,20 @@ class SpotifyTrendingIntegration:
         """Generate comprehensive trending insights."""
         print("\n🔥 Analyzing trending patterns...")
         
-        insights = {
+        category_analysis: Dict[str, Any] = {}
+        viral_content: List[Dict[str, Any]] = []
+        emerging_trends: List[Dict[str, Any]] = []
+        predictions: Dict[str, Any] = {}
+        top_movers: Dict[str, Any] = {}
+
+        insights: Dict[str, Any] = {
             'timestamp': datetime.now().isoformat(),
             'summary': {},
-            'category_analysis': {},
-            'viral_content': [],
-            'emerging_trends': [],
-            'predictions': {},
-            'top_movers': {}
+            'category_analysis': category_analysis,
+            'viral_content': viral_content,
+            'emerging_trends': emerging_trends,
+            'predictions': predictions,
+            'top_movers': top_movers
         }
         
         # Analyze each category
@@ -351,13 +369,13 @@ class SpotifyTrendingIntegration:
             print(f"   📊 {category.value.title()}: {len(category_items)} trending items")
             
             # Category analysis
-            directions = {}
+            directions: Dict[str, int] = {}
             for direction in TrendDirection:
                 count = len([item for item in category_items if item.direction == direction])
                 if count > 0:
                     directions[direction.value] = count
             
-            insights['category_analysis'][category.value] = {
+            category_analysis[category.value] = {
                 'total_items': len(category_items),
                 'directions': directions,
                 'top_trending': [
@@ -374,7 +392,7 @@ class SpotifyTrendingIntegration:
             # Find top movers
             if category_items:
                 top_gainer = max(category_items, key=lambda x: x.metrics.growth_rate)
-                insights['top_movers'][f'{category.value}_top_gainer'] = {
+                top_movers[f'{category.value}_top_gainer'] = {
                     'name': top_gainer.name,
                     'growth_rate': top_gainer.metrics.growth_rate,
                     'direction': top_gainer.direction.value
@@ -382,7 +400,7 @@ class SpotifyTrendingIntegration:
         
         # Get viral content across all categories
         viral_items = self.trending_schema.get_viral_content()
-        insights['viral_content'] = [
+        viral_content[:] = [
             {
                 'name': item.name,
                 'category': item.category.value,
@@ -394,7 +412,7 @@ class SpotifyTrendingIntegration:
         
         # Get emerging trends
         emerging_items = self.trending_schema.get_emerging_trends()
-        insights['emerging_trends'] = [
+        emerging_trends[:] = [
             {
                 'name': item.name,
                 'category': item.category.value,
@@ -417,15 +435,15 @@ class SpotifyTrendingIntegration:
         for item in top_trending:
             prediction = self.trending_schema.predict_trend_continuation(item.item_id)
             if prediction:
-                insights['predictions'][item.item_id] = prediction
+                predictions[item.item_id] = prediction
         
         # Summary statistics
         insights['summary'] = {
             'total_trending_items': len(all_trending),
             'viral_items': len(viral_items),
             'emerging_trends': len(emerging_items),
-            'categories_with_data': len([cat for cat in insights['category_analysis'].keys()]),
-            'predictions_generated': len(insights['predictions'])
+            'categories_with_data': len(list(category_analysis.keys())),
+            'predictions_generated': len(predictions)
         }
         
         return insights

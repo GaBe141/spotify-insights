@@ -32,8 +32,8 @@ sys.path.extend([
     str(PROJECT_ROOT / "core"),
 ])
 
-from advanced_analytics import MusicTrendAnalytics
-from statistical_analysis import StreamingDataQualityAnalyzer
+from advanced_analytics import MusicTrendAnalytics  # noqa: E402
+from statistical_analysis import StreamingDataQualityAnalyzer  # noqa: E402
 
 class AudoraMusicExplorer:
     """Interactive CLI for exploring Audora music discovery system."""
@@ -149,23 +149,23 @@ class AudoraMusicExplorer:
         print(f"🔥 Viral Score: {viral_score:.1f}/100")
         print(f"📊 Confidence: {confidence:.1%}")
         
-        print(f"\n📱 Platform Scores:")
+        print("\n📱 Platform Scores:")
         for platform, score in track_profile['platform_scores'].items():
             bars = "█" * (score // 10)
             print(f"   {platform:>10}: {bars:<10} {score}/100")
         
-        print(f"\n🌊 Social Signals:")
+        print("\n🌊 Social Signals:")
         print(f"   Mentions: {track_profile['social_signals']['mentions']:,}")
         print(f"   Shares: {track_profile['social_signals']['shares']:,}")
         print(f"   Comments: {track_profile['social_signals']['comments']:,}")
         
         # Viral prediction
         if viral_score > 80:
-            print(f"\n🚀 HIGH VIRAL POTENTIAL! Expected to trend within 3-7 days")
+            print("\n🚀 HIGH VIRAL POTENTIAL! Expected to trend within 3-7 days")
         elif viral_score > 60:
-            print(f"\n⚡ MODERATE VIRAL POTENTIAL. Monitor for growth")
+            print("\n⚡ MODERATE VIRAL POTENTIAL. Monitor for growth")
         else:
-            print(f"\n📈 STEADY GROWTH potential. Good for long-term playlists")
+            print("\n📈 STEADY GROWTH potential. Good for long-term playlists")
         
         self.current_session['analyzed_tracks'] += 1
         self.current_session['discoveries'].append({
@@ -177,7 +177,7 @@ class AudoraMusicExplorer:
     
     def show_trending(self):
         """Show currently trending tracks simulation."""
-        print(f"\n🔥 TRENDING NOW")
+        print("\n🔥 TRENDING NOW")
         print("-" * 40)
         
         # Use actual data from your collection for trending simulation
@@ -209,7 +209,7 @@ class AudoraMusicExplorer:
     
     def generate_insights(self):
         """Generate comprehensive music insights."""
-        print(f"\n🎨 MUSIC DISCOVERY INSIGHTS")
+        print("\n🎨 MUSIC DISCOVERY INSIGHTS")
         print("-" * 40)
         
         insights = []
@@ -239,11 +239,11 @@ class AudoraMusicExplorer:
         for insight in insights:
             print(f"   {insight}")
         
-        print(f"\n💡 RECOMMENDATIONS:")
-        print(f"   • Explore tracks with high energy and danceability")
-        print(f"   • Monitor cross-platform performance indicators")
-        print(f"   • Focus on emerging artists with growing momentum")
-        print(f"   • Analyze temporal patterns in listening habits")
+        print("\n💡 RECOMMENDATIONS:")
+        print("   • Explore tracks with high energy and danceability")
+        print("   • Monitor cross-platform performance indicators")
+        print("   • Focus on emerging artists with growing momentum")
+        print("   • Analyze temporal patterns in listening habits")
     
     def search_collection(self, query):
         """Search music collection."""
@@ -289,7 +289,7 @@ class AudoraMusicExplorer:
     
     def show_collection_stats(self):
         """Show collection statistics."""
-        print(f"\n📊 COLLECTION STATISTICS")
+        print("\n📊 COLLECTION STATISTICS")
         print("-" * 40)
         
         for name, df in self.music_data.items():
@@ -304,7 +304,7 @@ class AudoraMusicExplorer:
                 print()
         
         # Session stats
-        print(f"Session Statistics:")
+        print("Session Statistics:")
         print(f"   Tracks analyzed: {self.current_session['analyzed_tracks']}")
         print(f"   Discoveries made: {len(self.current_session['discoveries'])}")
         session_time = datetime.now() - self.current_session['start_time']
@@ -312,7 +312,7 @@ class AudoraMusicExplorer:
     
     def show_viral_candidates(self):
         """Show tracks with high viral potential."""
-        print(f"\n🚀 HIGH VIRAL POTENTIAL TRACKS")
+        print("\n🚀 HIGH VIRAL POTENTIAL TRACKS")
         print("-" * 40)
         
         # Analyze top tracks for viral potential
@@ -348,26 +348,26 @@ class AudoraMusicExplorer:
     
     def show_help(self):
         """Show available commands."""
-        print(f"\n🆘 AUDORA MUSIC EXPLORER - COMMANDS")
+        print("\n🆘 AUDORA MUSIC EXPLORER - COMMANDS")
         print("-" * 40)
-        print(f"analyze <track>     - Analyze viral potential of a specific track")
-        print(f"trending           - Show currently trending tracks")
-        print(f"insights           - Generate music discovery insights")
-        print(f"search <query>     - Search your music collection")
-        print(f"stats              - Show collection statistics")
-        print(f"viral              - Show tracks with high viral potential")
-        print(f"help               - Show this help")
-        print(f"exit               - Exit the explorer")
-        print(f"\nExample: analyze vampire")
-        print(f"Example: search bright eyes")
+        print("analyze <track>     - Analyze viral potential of a specific track")
+        print("trending           - Show currently trending tracks")
+        print("insights           - Generate music discovery insights")
+        print("search <query>     - Search your music collection")
+        print("stats              - Show collection statistics")
+        print("viral              - Show tracks with high viral potential")
+        print("help               - Show this help")
+        print("exit               - Exit the explorer")
+        print("\nExample: analyze vampire")
+        print("Example: search bright eyes")
     
     def run_interactive_shell(self):
         """Run the interactive command shell."""
-        print(f"\n🎯 Ready! Enter commands (type 'help' for available commands)")
+        print("\n🎯 Ready! Enter commands (type 'help' for available commands)")
         
         while True:
             try:
-                command = input(f"\naudora> ").strip()
+                command = input("\naudora> ").strip()
                 
                 if not command:
                     continue
@@ -377,8 +377,8 @@ class AudoraMusicExplorer:
                 arg = parts[1] if len(parts) > 1 else ""
                 
                 if cmd == 'exit' or cmd == 'quit':
-                    print(f"\n👋 Thanks for using Audora Music Explorer!")
-                    print(f"📊 Session Summary:")
+                    print("\n👋 Thanks for using Audora Music Explorer!")
+                    print("📊 Session Summary:")
                     print(f"   • Tracks analyzed: {self.current_session['analyzed_tracks']}")
                     print(f"   • Discoveries: {len(self.current_session['discoveries'])}")
                     session_time = datetime.now() - self.current_session['start_time']
@@ -416,7 +416,7 @@ class AudoraMusicExplorer:
                     print(f"❌ Unknown command: {cmd}. Type 'help' for available commands.")
             
             except KeyboardInterrupt:
-                print(f"\n\n👋 Goodbye!")
+                print("\n\n👋 Goodbye!")
                 break
             except Exception as e:
                 print(f"❌ Error: {e}")

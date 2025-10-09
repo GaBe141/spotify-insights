@@ -121,9 +121,9 @@ def test_basic_functionality():
     
     # Test scikit-learn
     try:
-        from sklearn.preprocessing import StandardScaler
-        from sklearn.cluster import DBSCAN
-        
+        from sklearn.preprocessing import StandardScaler  # type: ignore[import-untyped]
+        from sklearn.cluster import DBSCAN  # type: ignore[import-untyped]
+
         # Just test that we can import and create instances
         StandardScaler()
         DBSCAN()

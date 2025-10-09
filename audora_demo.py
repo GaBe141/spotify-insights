@@ -32,8 +32,8 @@ sys.path.extend([
 ])
 
 # Import working modules
-from advanced_analytics import MusicTrendAnalytics
-from statistical_analysis import StreamingDataQualityAnalyzer
+from advanced_analytics import MusicTrendAnalytics  # noqa: E402
+from statistical_analysis import StreamingDataQualityAnalyzer  # noqa: E402
 
 class AudoraMusicDiscoveryDemo:
     """
@@ -214,13 +214,13 @@ class AudoraMusicDiscoveryDemo:
         print("📋 KEY INSIGHTS:")
         for insight in insights:
             print(f"   {insight}")
-        
-        print(f"\n🚀 DISCOVERY RECOMMENDATIONS:")
-        print(f"   • Monitor TikTok for emerging viral content")
-        print(f"   • Cross-reference Spotify trending with YouTube Music")
-        print(f"   • Focus on tracks with 80+ viral scores")
-        print(f"   • Peak virality predicted in next 7-14 days")
-        
+
+        print("\n🚀 DISCOVERY RECOMMENDATIONS:")
+        print("   • Monitor TikTok for emerging viral content")
+        print("   • Cross-reference Spotify trending with YouTube Music")
+        print("   • Focus on tracks with 80+ viral scores")
+        print("   • Peak virality predicted in next 7-14 days")
+
         return insights
     
     def real_time_monitoring_simulation(self):
@@ -246,10 +246,10 @@ class AudoraMusicDiscoveryDemo:
             print(f"    Momentum: {momentum_bar:<10} {track['momentum']}% ({track['platforms']} platforms)")
         
         # Simulate alerts
-        print(f"\n🚨 VIRAL ALERTS:")
-        print(f"   • 'Vampire' showing 300% increase in TikTok mentions")
-        print(f"   • 'Flowers' detected on 15+ trending playlists")
-        print(f"   • Cross-platform surge detected for 'Anti-Hero'")
+        print("\n🚨 VIRAL ALERTS:")
+        print("   • 'Vampire' showing 300% increase in TikTok mentions")
+        print("   • 'Flowers' detected on 15+ trending playlists")
+        print("   • Cross-platform surge detected for 'Anti-Hero'")
     
     def export_analysis_report(self, viral_candidates, insights):
         """Export comprehensive analysis report."""
@@ -276,7 +276,7 @@ class AudoraMusicDiscoveryDemo:
             json.dump(report, f, indent=2, default=str)
         
         print(f"✅ Report saved: {report_path}")
-        print(f"📊 Summary:")
+        print("📊 Summary:")
         print(f"   • Tracks analyzed: {report['summary']['total_tracks_analyzed']}")
         print(f"   • High viral potential: {report['summary']['high_viral_potential']}")
         print(f"   • Average viral score: {report['summary']['average_viral_score']:.1f}")
@@ -321,11 +321,11 @@ class AudoraMusicDiscoveryDemo:
         print("✅ Comprehensive analytics reporting")
         print("✅ Music discovery insights generation")
         
-        print(f"\n🔧 NEXT STEPS:")
-        print(f"• Run: python main.py --mode single")
-        print(f"• Run: python main.py --mode continuous")
-        print(f"• Check reports in: data/reports/")
-        print(f"• Explore: python -c 'import analytics.advanced_analytics; help(analytics.advanced_analytics)'")
+    print("\n🔧 NEXT STEPS:")
+    print("• Run: python main.py --mode single")
+    print("• Run: python main.py --mode continuous")
+    print("• Check reports in: data/reports/")
+    print("• Explore: python -c 'import analytics.advanced_analytics; help(analytics.advanced_analytics)'")
 
 def main():
     """Main demo execution."""
