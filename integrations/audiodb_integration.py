@@ -239,7 +239,8 @@ def get_audiodb_client() -> AudioDBAPI:
         sys.path.append(str(Path(__file__).parent.parent / "core"))
         from config import SecureConfig
         
-        config_manager = SecureConfig()
+        # Initialize config manager but don't store unused variable
+        SecureConfig()
         # Try to get AudioDB config if available
         api_key = os.getenv('AUDIODB_API_KEY', '123')  # Default to free key
         return AudioDBAPI(api_key)
@@ -411,7 +412,9 @@ def analyze_genre_evolution_with_audiodb(artist_names: List[str]) -> Dict[str, p
             'genre': lambda x: x.mode().iloc[0] if len(x.mode()) > 0 else None
         }).reset_index()
         
-        career_progression.columns = ['artist_name', 'first_album_year', 'latest_album_year', 'total_albums', 'dominant_genre']
+        # Flatten MultiIndex columns properly for type safety
+        new_columns = ['artist_name', 'first_album_year', 'latest_album_year', 'total_albums', 'dominant_genre']
+        career_progression.columns = pd.Index(new_columns)
     else:
         genre_trends = pd.DataFrame()
         career_progression = pd.DataFrame()
