@@ -9,10 +9,13 @@ import json
 from datetime import datetime, timedelta
 from typing import Dict, Any
 
-# Add src directory to path (runtime convenience)
-sys.path.append(str(Path(__file__).parent / "src"))
+# Add parent directory to path for module imports
+sys.path.extend([
+    str(Path(__file__).parent.parent / "analytics"),
+    str(Path(__file__).parent.parent / "core"),
+])
 
-from src.trending_schema import (
+from trending_schema import (
     TrendingSchema, TrendCategory, TrendDirection
 )
 

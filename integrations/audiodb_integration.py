@@ -2,13 +2,10 @@
 
 import requests
 import pandas as pd
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 import time
-try:
-    from .config import get_config
-except ImportError:
-    # Fallback for standalone execution
-    pass
+
+# Note: config import is optional for standalone execution
 
 BASE_URL = "https://www.theaudiodb.com/api/v1/json"
 
@@ -30,7 +27,7 @@ class AudioDBAPI:
             time.sleep(self.rate_limit_delay - time_since_last)
         self.last_request_time = time.time()
     
-    def _make_request(self, endpoint: str, params: Dict = None) -> Optional[Dict]:
+    def _make_request(self, endpoint: str, params: Optional[Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
         """Make a request to AudioDB API with rate limiting."""
         self._rate_limit()
         
@@ -50,7 +47,7 @@ class AudioDBAPI:
     
     def search_artist(self, artist_name: str) -> Optional[Dict]:
         """Search for an artist by name."""
-        result = self._make_request(f"search.php", {"s": artist_name})
+        result = self._make_request("search.php", {"s": artist_name})
         
         if result and result.get('artists'):
             return result['artists'][0]
@@ -233,10 +230,19 @@ class AudioDBAPI:
 def get_audiodb_client() -> AudioDBAPI:
     """Get AudioDB API client with secure configuration."""
     try:
-        from .config import get_config
-        config_manager = get_config()
-        audiodb_config = config_manager.get_audiodb_config()
-        return AudioDBAPI(audiodb_config['api_key'])
+        # Try to load configuration if available
+        import os
+        import sys
+        from pathlib import Path
+        
+        # Add core directory to path to find config
+        sys.path.append(str(Path(__file__).parent.parent / "core"))
+        from config import SecureConfig
+        
+        config_manager = SecureConfig()
+        # Try to get AudioDB config if available
+        api_key = os.getenv('AUDIODB_API_KEY', '123')  # Default to free key
+        return AudioDBAPI(api_key)
     except ImportError:
         # Fallback for standalone execution
         import os
@@ -244,6 +250,115 @@ def get_audiodb_client() -> AudioDBAPI:
         return AudioDBAPI(api_key)
     except Exception:
         return AudioDBAPI('123')  # Default to free key
+
+
+class AudioDBIntegration:
+    """
+    Main AudioDB integration class for comprehensive music metadata enrichment.
+    
+    Provides high-level interface for:
+    - Artist profile enrichment 
+    - Genre evolution analysis
+    - Discography analysis
+    - Career progression tracking
+    """
+    
+    def __init__(self, api_key: Optional[str] = None):
+        """Initialize AudioDB integration."""
+        self.client = AudioDBAPI(api_key)
+        
+    def enrich_artist_data(self, artist_names: List[str]) -> pd.DataFrame:
+        """Enrich a list of artists with AudioDB metadata."""
+        return self.client.enrich_artist_profiles(artist_names)
+    
+    def get_artist_profile(self, artist_name: str) -> Optional[Dict[str, Any]]:
+        """Get comprehensive artist profile."""
+        return self.client.get_artist_details(artist_name)
+    
+    def analyze_discography(self, artist_name: str) -> Dict[str, Any]:
+        """Analyze artist's complete discography."""
+        albums = self.client.get_artist_albums(artist_name)
+        artist_details = self.client.get_artist_details(artist_name)
+        
+        if not albums:
+            return {'error': f'No albums found for {artist_name}'}
+        
+        # Convert to DataFrame for analysis
+        albums_df = pd.DataFrame(albums)
+        
+        # Basic statistics
+        analysis = {
+            'artist_name': artist_name,
+            'total_albums': len(albums),
+            'genres': albums_df['genre'].value_counts().to_dict() if 'genre' in albums_df else {},
+            'career_span': None,
+            'most_productive_decade': None,
+            'average_score': None
+        }
+        
+        # Career span analysis
+        if 'year' in albums_df.columns:
+            years = pd.to_numeric(albums_df['year'], errors='coerce').dropna()
+            if not years.empty:
+                analysis['career_span'] = {
+                    'start_year': int(years.min()),
+                    'end_year': int(years.max()),
+                    'duration_years': int(years.max() - years.min())
+                }
+                
+                # Decade analysis
+                decades = (years // 10) * 10
+                most_productive = decades.value_counts().index[0] if not decades.empty else None
+                analysis['most_productive_decade'] = f"{int(most_productive)}s" if most_productive else None
+        
+        # Score analysis
+        if 'score' in albums_df.columns:
+            scores = pd.to_numeric(albums_df['score'], errors='coerce').dropna()
+            if not scores.empty:
+                analysis['average_score'] = float(scores.mean())
+        
+        # Add artist metadata
+        if artist_details:
+            analysis['artist_metadata'] = {
+                'country': artist_details.get('country'),
+                'genre': artist_details.get('genre'),
+                'formed_year': artist_details.get('formed_year'),
+                'members': artist_details.get('members')
+            }
+        
+        return analysis
+    
+    def compare_artists(self, artist_names: List[str]) -> Dict[str, Any]:
+        """Compare multiple artists using AudioDB data."""
+        comparisons = {}
+        
+        for artist in artist_names:
+            profile = self.get_artist_profile(artist)
+            discography = self.analyze_discography(artist)
+            
+            if profile and 'error' not in discography:
+                comparisons[artist] = {
+                    'country': profile.get('country'),
+                    'genre': profile.get('genre'),
+                    'formed_year': profile.get('formed_year'),
+                    'total_albums': discography.get('total_albums', 0),
+                    'career_span': discography.get('career_span', {}),
+                    'average_score': discography.get('average_score')
+                }
+        
+        # Generate comparative insights
+        insights = {
+            'artists_compared': len(comparisons),
+            'countries_represented': len(set(data.get('country') for data in comparisons.values() if data.get('country'))),
+            'genres_represented': len(set(data.get('genre') for data in comparisons.values() if data.get('genre'))),
+            'most_prolific': max(comparisons.items(), key=lambda x: x[1].get('total_albums', 0))[0] if comparisons else None,
+            'highest_rated': max(comparisons.items(), key=lambda x: x[1].get('average_score', 0) or 0)[0] if comparisons else None
+        }
+        
+        return {
+            'comparisons': comparisons,
+            'insights': insights
+        }
 
 
 def enrich_spotify_artists_with_audiodb(spotify_df: pd.DataFrame) -> pd.DataFrame:
