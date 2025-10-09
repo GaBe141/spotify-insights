@@ -1,4 +1,4 @@
-# 🎵 Spotify Insights - Comprehensive Music Discovery System
+# 🎵 Audora - Comprehensive Music Discovery System
 
 A powerful, multi-platform music discovery and trend analysis system that monitors Gen Z and Gen Alpha music consumption patterns across TikTok, YouTube, Instagram, Twitter, Reddit, Tumblr, and more.
 
@@ -37,8 +37,8 @@ A powerful, multi-platform music discovery and trend analysis system that monito
 ### Quick Setup
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/spotify-insights.git
-cd spotify-insights
+git clone https://github.com/yourusername/audora.git
+cd audora
 
 # Run the setup script
 python setup.py

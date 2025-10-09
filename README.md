@@ -1,4 +1,4 @@
-# 🎵 Enhanced Spotify Music Discovery System v2.0
+# 🎵 Audora - Enhanced Music Discovery System v2.0
 
 > **AI-Powered Music Trend Discovery with Multi-Platform Social Media Monitoring**
 
@@ -10,8 +10,8 @@
 
 ```bash
 # 1. Clone and setup
-git clone https://github.com/GaBe141/spotify-insights.git
-cd spotify-insights
+git clone https://github.com/GaBe141/audora.git
+cd audora
 
 # 2. Run comprehensive setup  
 python main.py --setup
@@ -62,7 +62,7 @@ python main.py --demo all            # See all demonstrations
 ## 📁 **Project Structure**
 
 ```
-spotify-insights/
+audora/
 ├── main.py                    # 🚀 Main entry point
 ├── 
 ├── 📁 core/                   # Core application components

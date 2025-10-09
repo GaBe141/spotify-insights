@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Spotify Music Discovery System - Main Entry Point
-=================================================
+Audora - Enhanced Music Discovery System - Main Entry Point
+==========================================================
 
 Enhanced music discovery system with ML-powered viral prediction,
 multi-platform social media monitoring, and real-time analytics.
@@ -87,7 +87,7 @@ For detailed documentation, see docs/QUICK_START.md
     
     # Handle setup
     if args.setup:
-        print("🚀 Running Enhanced Music Discovery System Setup...")
+        print("🚀 Running Audora Music Discovery System Setup...")
         try:
             from scripts.setup import main as setup_main
             return setup_main()
