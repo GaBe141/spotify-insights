@@ -478,7 +478,13 @@ class SpotifyTrendingIntegration:
         # Save main report using centralized utility
         from core.utils import save_report
 
-        saved_path = save_report(report, filename="spotify_trending_report.json", prefix="spotify_trending", output_dir=str(output_path), add_timestamp=False)
+        saved_path = save_report(
+            report,
+            filename="spotify_trending_report.json",
+            prefix="spotify_trending",
+            output_dir=str(output_path),
+            add_timestamp=False,
+        )
 
         # Create text summary
         summary_file = output_path / "trending_summary.txt"

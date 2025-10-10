@@ -352,7 +352,7 @@ class AdvancedStreamingAnalytics:
                     )
 
         # Forecasting insights
-        for source, source_data in self.forecasts.items():
+        for _source, source_data in self.forecasts.items():
             for col, col_data in source_data.items():
                 if "error" in col_data:
                     continue
@@ -364,10 +364,9 @@ class AdvancedStreamingAnalytics:
                     best_mae = float("inf")
 
                     for model_name, metrics in performance.items():
-                        if isinstance(metrics, dict) and "mae" in metrics:
-                            if metrics["mae"] < best_mae:
-                                best_mae = metrics["mae"]
-                                best_model = model_name
+                        if isinstance(metrics, dict) and "mae" in metrics and metrics["mae"] < best_mae:
+                            best_mae = metrics["mae"]
+                            best_model = model_name
 
                     if best_model:
                         insights["forecasting_insights"].append(
@@ -376,7 +375,7 @@ class AdvancedStreamingAnalytics:
 
                 # Forecast trend insights
                 forecasts = col_data.get("forecasts", {})
-                for model_name, forecast_data in forecasts.items():
+                for _model_name, forecast_data in forecasts.items():
                     if "forecast" in forecast_data:
                         forecast_values = forecast_data["forecast"][:7]  # Next week
                         if len(forecast_values) >= 2:
@@ -396,7 +395,7 @@ class AdvancedStreamingAnalytics:
 
         # Generate recommendations
         all_recommendations = []
-        for source, quality_data in self.analysis_results.get("quality", {}).items():
+        for _source, quality_data in self.analysis_results.get("quality", {}).items():
             recommendations = quality_data.get("recommendations", [])
             all_recommendations.extend(recommendations)
 
@@ -467,7 +466,7 @@ class AdvancedStreamingAnalytics:
 
         # Save results using centralized utility
         from core.utils import write_json
-        
+
         results_file = output_path / "comprehensive_analysis_results.json"
         write_json(str(results_file), comprehensive_results)
 

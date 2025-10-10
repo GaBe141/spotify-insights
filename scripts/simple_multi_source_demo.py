@@ -171,7 +171,7 @@ def simple_multi_source_demo():
 
     # Save insights using centralized utility
     from core.utils import write_json
-    
+
     write_json(str(data_dir / "simple_insights.json"), insights)
 
     # Print summary

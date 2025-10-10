@@ -283,7 +283,7 @@ def create_analysis_report(data_files, insights):
 
     # Save report using centralized utility
     from core.utils import write_json
-    
+
     report_path = Path("data") / "streaming_analysis_report.json"
     write_json(str(report_path), report)
 
