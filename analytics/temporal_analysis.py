@@ -15,7 +15,6 @@ Provides insights into:
 - Energy level correlations with time
 """
 
-import json
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -23,7 +22,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from core.utils import ensure_datetime_column, load_dataframe
+from core.utils import ensure_datetime_column, load_dataframe, save_report
 
 
 class TemporalAnalyzer:
@@ -449,21 +448,20 @@ class TemporalAnalyzer:
                 print(f"   Days since last listen: {streaks['days_since_last_listen']}")
 
     def export_report(self, output_file: str | None = None) -> str:
-        """Export temporal analysis report to JSON."""
+        """Export temporal analysis report to JSON using centralized utility."""
         report = self.generate_comprehensive_report()
 
-        if not output_file:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_file = f"temporal_analysis_{timestamp}.json"
+        # Use save_report utility
+        saved_path = save_report(
+            report,
+            filename=output_file,
+            prefix="temporal_analysis",
+            output_dir=str(self.data_dir / "reports"),
+            add_timestamp=False,  # Already added in generate_comprehensive_report
+        )
 
-        output_path = self.data_dir / "reports" / output_file
-        output_path.parent.mkdir(exist_ok=True)
-
-        with open(output_path, "w", encoding="utf-8") as f:
-            json.dump(report, f, indent=2)
-
-        print(f"\n✅ Report exported: {output_path}")
-        return str(output_path)
+        print(f"\n✅ Report exported: {saved_path}")
+        return str(saved_path)
 
 
 def main():

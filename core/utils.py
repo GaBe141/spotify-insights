@@ -312,3 +312,51 @@ def get_date_string(fmt: str = "%Y-%m-%d") -> str:
         '20251010'
     """
     return datetime.now().strftime(fmt)
+
+
+# Report generation helpers
+def save_report(
+    data: dict[str, Any],
+    filename: str | None = None,
+    prefix: str = "report",
+    output_dir: str = "data/reports",
+    add_timestamp: bool = True,
+) -> Path:
+    """
+    Save a report/analysis to JSON with automatic timestamping and directory creation.
+
+    Args:
+        data: Dictionary data to save
+        filename: Custom filename (if None, auto-generates with timestamp)
+        prefix: Prefix for auto-generated filename
+        output_dir: Directory to save report to
+        add_timestamp: Whether to add timestamp to data (as 'timestamp' key)
+
+    Returns:
+        Path to saved report file
+
+    Examples:
+        >>> save_report({"analysis": "results"}, prefix="analytics")
+        PosixPath('data/reports/analytics_20251010_143052.json')
+        >>> save_report({"data": "test"}, filename="custom_report.json")
+        PosixPath('data/reports/custom_report.json')
+    """
+    # Auto-generate filename if not provided
+    if filename is None:
+        timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{prefix}_{timestamp_str}.json"
+
+    # Create full path
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+    filepath = output_path / filename
+
+    # Add timestamp to data if requested
+    if add_timestamp and "timestamp" not in data:
+        data = {**data, "timestamp": get_iso_timestamp()}
+
+    # Save using write_json
+    write_json(filepath, data)
+    logger.info(f"Saved report to {filepath}")
+
+    return filepath

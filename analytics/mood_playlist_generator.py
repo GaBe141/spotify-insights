@@ -18,6 +18,7 @@ Mood Categories:
 """
 
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -25,7 +26,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from core.utils import load_dataframe
+from core.utils import load_dataframe, save_report
 
 
 class MoodCategory(Enum):
@@ -390,23 +391,12 @@ class MoodPlaylistGenerator:
 
     def export_playlist(self, mood: MoodCategory, output_file: str | None = None) -> str:
         """
-        Export playlist to JSON file.
+        Export playlist to JSON file using centralized utility.
 
         Returns:
             Path to exported file
         """
-        import json
-        from datetime import datetime
-
         tracks = self.get_playlist(mood)
-
-        if not output_file:
-            mood_name = mood.name.lower()
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_file = f"playlist_{mood_name}_{timestamp}.json"
-
-        output_path = self.data_dir / "playlists" / output_file
-        output_path.parent.mkdir(exist_ok=True)
 
         playlist_data = {
             "mood": mood.value,
@@ -416,11 +406,17 @@ class MoodPlaylistGenerator:
             "tracks": tracks,
         }
 
-        with open(output_path, "w", encoding="utf-8") as f:
-            json.dump(playlist_data, f, indent=2)
+        # Use save_report utility
+        saved_path = save_report(
+            playlist_data,
+            filename=output_file,
+            prefix=f"playlist_{mood.name.lower()}",
+            output_dir=str(self.data_dir / "playlists"),
+            add_timestamp=False,  # Already added in playlist_data
+        )
 
-        print(f"✅ Playlist exported: {output_path}")
-        return str(output_path)
+        print(f"✅ Playlist exported: {saved_path}")
+        return str(saved_path)
 
     def get_mood_statistics(self) -> dict[str, Any]:
         """Get statistics about generated playlists."""
