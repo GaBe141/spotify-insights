@@ -3,11 +3,12 @@ Configuration management for social media APIs.
 Handles API keys, rate limiting, and platform-specific settings.
 """
 
-import json
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+from core.utils import read_json, write_json
 
 
 @dataclass
@@ -46,16 +47,12 @@ class SocialAPIManager:
         self.load_configs()
 
     def load_configs(self):
-        """Load API configurations from file."""
-        if self.config_file.exists():
-            try:
-                with open(self.config_file) as f:
-                    data = json.load(f)
+        """Load API configurations from file using centralized utility."""
+        data = read_json(self.config_file, default={})
 
-                for platform, config_data in data.items():
-                    self.configs[platform] = APIConfig(platform=platform, **config_data)
-            except Exception as e:
-                print(f"Error loading API configs: {e}")
+        if data:
+            for platform, config_data in data.items():
+                self.configs[platform] = APIConfig(platform=platform, **config_data)
         else:
             self._create_default_configs()
 
@@ -117,9 +114,7 @@ class SocialAPIManager:
         self.save_configs()
 
     def save_configs(self):
-        """Save configurations to file."""
-        self.config_file.parent.mkdir(parents=True, exist_ok=True)
-
+        """Save configurations to file using centralized utility."""
         config_data = {}
         for platform, config in self.configs.items():
             config_data[platform] = {
@@ -135,8 +130,7 @@ class SocialAPIManager:
                 "error_count": config.error_count,
             }
 
-        with open(self.config_file, "w") as f:
-            json.dump(config_data, f, indent=2)
+        write_json(self.config_file, config_data)
 
     def get_config(self, platform: str) -> APIConfig | None:
         """Get configuration for a platform."""

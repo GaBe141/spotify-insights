@@ -4,17 +4,17 @@ Integrates TikTok, YouTube, Instagram, Twitter, and other platforms to track Gen
 """
 
 import asyncio
-import json
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from pathlib import Path
 from typing import Any
 
 import aiohttp
 
 # Import our existing trending schema
 from trending_schema import TrendingSchema
+
+from core.utils import write_json
 
 
 class Platform(Enum):
@@ -748,18 +748,13 @@ class SocialMusicDiscoveryEngine:
         return recommendations
 
     def save_discovery_report(self, report: dict[str, Any], filepath: str = None) -> str:
-        """Save discovery report to file."""
+        """Save discovery report to file using centralized utility."""
         if filepath is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filepath = f"data/social_discovery_report_{timestamp}.json"
 
-        filepath_obj = Path(filepath)
-        filepath_obj.parent.mkdir(parents=True, exist_ok=True)
-
-        with open(filepath_obj, "w", encoding="utf-8") as f:
-            json.dump(report, f, indent=2, default=str, ensure_ascii=False)
-
-        return str(filepath_obj)
+        saved_path = write_json(filepath, report)
+        return str(saved_path)
 
 
 # Mock data generator for testing without API keys

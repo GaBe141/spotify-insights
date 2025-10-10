@@ -1,9 +1,10 @@
 """Multi-source music data integration combining Spotify, Last.fm, MusicBrainz, AudioDB, and Charts."""
 
-import json
 from pathlib import Path
 
 import pandas as pd
+
+from core.utils import save_dataframe, write_json
 
 from .audiodb_integration import (
     analyze_genre_evolution_with_audiodb,
@@ -223,7 +224,7 @@ def analyze_cross_platform_insights(all_data: dict[str, pd.DataFrame]) -> dict[s
 
 
 def save_all_data(all_data: dict[str, pd.DataFrame], insights: dict) -> None:
-    """Save all collected data and insights."""
+    """Save all collected data and insights using centralized utilities."""
     print("\n💾 Saving multi-source analysis results...")
 
     data_dir = Path("data")
@@ -233,13 +234,12 @@ def save_all_data(all_data: dict[str, pd.DataFrame], insights: dict) -> None:
     for name, df in all_data.items():
         if isinstance(df, pd.DataFrame) and not df.empty:
             filepath = data_dir / f"{name}.csv"
-            df.to_csv(filepath, index=False)
+            save_dataframe(df, filepath)
             print(f"Saved {filepath}")
 
     # Save insights as JSON
     insights_file = data_dir / "multi_source_insights.json"
-    with open(insights_file, "w", encoding="utf-8") as f:
-        json.dump(insights, f, indent=2, default=str)
+    write_json(insights_file, insights)
     print(f"Saved {insights_file}")
 
 
