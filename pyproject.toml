@@ -1,0 +1,149 @@
+# Audora Music Discovery System - Project Configuration
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "audora"
+version = "1.0.0"
+description = "AI-Powered Music Discovery & Viral Prediction Platform"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    {name = "Audora Team"}
+]
+keywords = ["music", "discovery", "analytics", "spotify", "viral-prediction"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Multimedia :: Sound/Audio :: Analysis",
+]
+
+# Tool configurations
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.git
+  | \.venv
+  | venv
+  | __pycache__
+  | build
+  | dist
+  | notebooks
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+# Exclude directories
+exclude = [
+    ".git",
+    ".venv",
+    "venv",
+    "__pycache__",
+    "build",
+    "dist",
+    "notebooks",
+    "*.egg-info",
+]
+
+[tool.ruff.lint]
+# Enable specific rule sets
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "PTH", # flake8-use-pathlib
+    "SIM", # flake8-simplify
+]
+
+# Ignore specific rules
+ignore = [
+    "E501",  # Line too long (handled by Black)
+    "B008",  # Do not perform function calls in argument defaults
+    "B904",  # Within an except clause, raise exceptions with raise ... from err
+    "N802",  # Function name should be lowercase
+    "N803",  # Argument name should be lowercase
+    "N806",  # Variable in function should be lowercase
+    "N818",  # Exception name should be named with an Error suffix (AudoraException is intentional)
+    "SIM108",  # Use ternary operator (less readable in some cases)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]  # Allow unused imports in __init__.py
+"scripts/*.py" = ["E402"]  # Allow module level import not at top of file in scripts
+
+[tool.ruff.lint.isort]
+known-first-party = ["core", "analytics", "integrations", "visualization"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = false  # Too strict for database/cache returns
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = false  # Can be noisy
+warn_no_return = true
+strict_equality = true
+
+# Ignore missing imports for third-party libraries without stubs
+[[tool.mypy.overrides]]
+module = "redis.*"
+ignore_missing_imports = true
+
+# Exclude certain directories
+exclude = [
+    "^tests/",
+    "^notebooks/",
+    "^scripts/",
+    "^backups/",
+]
+
+[[tool.mypy.overrides]]
+module = [
+    "spotipy.*",
+    "plotly.*",
+    "sklearn.*",
+    "pandas.*",
+    "numpy.*",
+    "scipy.*",
+    "statsmodels.*",
+    "darts.*",
+]
+ignore_missing_imports = true
+
+[tool.bandit]
+exclude_dirs = ["tests", "scripts/demo_*", "notebooks", ".venv", "venv"]
+# Skip: B101=assert_used, B601=paramiko, B403=pickle_import, B301=pickle_loads, B324=hashlib_md5, B608=hardcoded_sql
+skips = ["B101", "B601", "B403", "B301", "B324", "B608"]
+
+[tool.bandit.assert_used]
+skips = ["*/test_*.py", "*/tests/*.py"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--verbose",
+    "--strict-markers",
+    "--tb=short",
+]
