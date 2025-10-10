@@ -137,7 +137,7 @@ python src/music_discovery_app.py
 
 # Follow the interactive menu:
 # 1. Run single discovery scan
-# 2. View API status  
+# 2. View API status
 # 3. Generate analytics report
 # 4. Start continuous monitoring
 # 5. Configure APIs
@@ -151,7 +151,7 @@ python src/music_discovery_app.py
 # Run social media discovery
 python src/social_discovery_engine.py
 
-# Run extended platform discovery  
+# Run extended platform discovery
 python src/extended_platforms.py
 ```
 
@@ -183,7 +183,7 @@ app = ComprehensiveMusicDiscoveryApp()
 async def discover_music():
     results = await app.run_full_discovery("US")
     print(f"Found {results['total_songs']} songs")
-    
+
     # Save report
     report_path = app.save_discovery_report(results)
     print(f"Report saved to: {report_path}")

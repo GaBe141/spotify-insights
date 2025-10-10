@@ -215,17 +215,17 @@ from pydantic import BaseSettings, Field
 class DatabaseConfig(BaseSettings):
     path: str = Field(default="audora.db")
     pool_size: int = Field(default=5, ge=1, le=20)
-    
+
 class SpotifyConfig(BaseSettings):
     client_id: str
     client_secret: str
     redirect_uri: str
-    
+
 class Config(BaseSettings):
     database: DatabaseConfig
     spotify: SpotifyConfig
     redis: RedisConfig | None = None
-    
+
     class Config:
         env_file = ".env"
         env_nested_delimiter = "__"
@@ -237,7 +237,7 @@ class Config(BaseSettings):
 
 ### Module Import Tests
 ✅ **core/dependency_injection.py**: Imports successfully
-✅ **core/caching.py**: Imports successfully  
+✅ **core/caching.py**: Imports successfully
 ✅ **core/data_store.py**: Enhanced version imports successfully
 
 ### Functionality Tests

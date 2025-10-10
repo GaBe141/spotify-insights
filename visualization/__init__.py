@@ -27,10 +27,9 @@ __version__ = "2.0.0"
 # Import key visualization classes
 try:
     from .statistical_viz import StatisticalVisualizationEngine
+
     # Note: advanced_viz contains standalone functions, not classes
-    
-    __all__ = [
-        "StatisticalVisualizationEngine"
-    ]
+
+    __all__ = ["StatisticalVisualizationEngine"]
 except ImportError:
     __all__ = []

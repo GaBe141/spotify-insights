@@ -8,7 +8,7 @@ and statistical analysis tools for music trend prediction.
 Key Features:
     - Viral prediction using ML algorithms (80%+ accuracy)
     - Trend clustering and pattern recognition
-    - Cross-platform correlation analysis  
+    - Cross-platform correlation analysis
     - Time series forecasting (ARIMA, linear regression)
     - Statistical analysis and data science tools
     - Audio feature analysis and sentiment detection
@@ -27,11 +27,7 @@ __version__ = "2.0.0"
 try:
     from .advanced_analytics import MusicTrendAnalytics
     from .statistical_analysis import StreamingDataQualityAnalyzer, StreamingForecastingEngine
-    
-    __all__ = [
-        "MusicTrendAnalytics",
-        "StreamingDataQualityAnalyzer",
-        "StreamingForecastingEngine"
-    ]
+
+    __all__ = ["MusicTrendAnalytics", "StreamingDataQualityAnalyzer", "StreamingForecastingEngine"]
 except ImportError:
     __all__ = []

@@ -24,16 +24,16 @@ function Sync-GitRepository {
 
 function New-GitBranch {
     param([string]$branchName)
-    
+
     if (-not $branchName) {
         Write-Host "📋 Available branches:" -ForegroundColor Cyan
         git branch -a
         return
     }
-    
+
     Write-Host "🌿 Creating and switching to branch: $branchName" -ForegroundColor Yellow
     git checkout -b $branchName
-    
+
     if ($LASTEXITCODE -eq 0) {
         Write-Host "✅ Branch created and switched!" -ForegroundColor Green
     } else {

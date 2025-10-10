@@ -66,7 +66,7 @@ asyncio.run(test_discovery())
 ## What You'll Get
 
 - **Real-time music trends** from TikTok, YouTube, Instagram, Twitter
-- **Underground discoveries** from Reddit, Tumblr, SoundCloud  
+- **Underground discoveries** from Reddit, Tumblr, SoundCloud
 - **Viral predictions** using statistical analysis
 - **Cross-platform insights** showing where songs are trending
 - **Automated reports** saved to your data/ folder

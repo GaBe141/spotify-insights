@@ -27,4 +27,3 @@ types-pandas==2.3.3.20250110
 # prophet>=1.1.5  # Facebook Prophet (requires additional setup)
 # tensorflow>=2.13.0  # For deep learning models (large install)
 # torch>=2.0.0  # PyTorch for neural forecasting (large install)
-

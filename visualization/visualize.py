@@ -1,7 +1,8 @@
 from pathlib import Path
+
+import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
@@ -31,7 +32,9 @@ def plot_top_artists_bar(df: pd.DataFrame, title: str = "Top Artists (short term
     return out_path
 
 
-def plot_recently_played_heatmap(df: pd.DataFrame, title: str = "Listening heatmap (last 50)") -> Path:
+def plot_recently_played_heatmap(
+    df: pd.DataFrame, title: str = "Listening heatmap (last 50)"
+) -> Path:
     """Plot a heatmap of play counts by day of week vs hour.
 
     Expects df with column 'played_at' as datetime.
@@ -54,7 +57,9 @@ def plot_recently_played_heatmap(df: pd.DataFrame, title: str = "Listening heatm
     tmp["dow"] = pd.Categorical(tmp["dow"], categories=day_order, ordered=True)
 
     # Pivot to counts
-    pivot = tmp.pivot_table(index="dow", columns="hour", values="track_id", aggfunc="count", fill_value=0)
+    pivot = tmp.pivot_table(
+        index="dow", columns="hour", values="track_id", aggfunc="count", fill_value=0
+    )
 
     out_path = DATA_DIR / "recently_played_heatmap.png"
     plt.figure(figsize=(10, 4))

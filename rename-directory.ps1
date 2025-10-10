@@ -12,7 +12,7 @@ Write-Host ""
 
 Write-Host "🔧 To complete the directory rename:" -ForegroundColor Cyan
 Write-Host "   1. Close VS Code (if open)" -ForegroundColor White
-Write-Host "   2. Exit all terminals in this directory" -ForegroundColor White  
+Write-Host "   2. Exit all terminals in this directory" -ForegroundColor White
 Write-Host "   3. Navigate to Documents folder" -ForegroundColor White
 Write-Host "   4. Run: Rename-Item 'spotify-insights' 'audora'" -ForegroundColor White
 Write-Host "   5. Reopen project: code audora" -ForegroundColor White

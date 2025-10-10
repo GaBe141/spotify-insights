@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from .fetch import fetch_top_artists, fetch_recently_played
-from .visualize import plot_top_artists_bar, plot_recently_played_heatmap
+from .fetch import fetch_recently_played, fetch_top_artists
+from .visualize import plot_recently_played_heatmap, plot_top_artists_bar
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)

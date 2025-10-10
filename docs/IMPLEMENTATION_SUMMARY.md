@@ -9,7 +9,7 @@ A comprehensive, multi-platform music discovery system that monitors Gen Z and G
 ### 1. `social_discovery_engine.py` - Main Discovery Engine
 - **TikTok Research API**: Viral sounds, hashtag trends, dance challenges
 - **YouTube Data API**: Trending music videos and YouTube Shorts
-- **Instagram Graph API**: Reels music usage and Story music stickers  
+- **Instagram Graph API**: Reels music usage and Story music stickers
 - **Twitter API v2**: Real-time music buzz and trending hashtags
 - **Cross-Platform Analysis**: Identifies songs trending on multiple platforms
 - **Viral Progression Tracking**: Monitors how songs spread across platforms

@@ -4,7 +4,7 @@ Core Components for Enhanced Music Discovery System
 
 This module contains the core application components including:
 - Main application orchestration
-- Data persistence and storage  
+- Data persistence and storage
 - Resilience and reliability systems
 - Authentication and configuration
 - Notification services
@@ -24,14 +24,10 @@ __author__ = "Enhanced Music Discovery Team"
 # Import key classes for easy access
 try:
     from .data_store import EnhancedMusicDataStore
-    from .resilience import EnhancedResilience  
     from .notification_service import EnhancedNotificationService
-    
-    __all__ = [
-        "EnhancedMusicDataStore",
-        "EnhancedResilience", 
-        "EnhancedNotificationService"
-    ]
+    from .resilience import EnhancedResilience
+
+    __all__ = ["EnhancedMusicDataStore", "EnhancedResilience", "EnhancedNotificationService"]
 except ImportError:
     # Allow module to be imported even if dependencies aren't installed
     __all__ = []

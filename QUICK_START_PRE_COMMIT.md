@@ -74,10 +74,10 @@ Still need attention:
 
 ## ✨ Benefits
 
-✅ No more style debates - Black enforces consistency  
-✅ Catch bugs early - Before they reach CI  
-✅ Better code quality - Automatic linting  
-✅ Security scanning - Built-in vulnerability detection  
-✅ Faster reviews - Formatting already done  
+✅ No more style debates - Black enforces consistency
+✅ Catch bugs early - Before they reach CI
+✅ Better code quality - Automatic linting
+✅ Security scanning - Built-in vulnerability detection
+✅ Faster reviews - Formatting already done
 
 **Your code quality just got automated!** 🎉

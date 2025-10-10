@@ -251,7 +251,7 @@ python validate_security.py
    ```bash
    # Install statistical libraries
    pip install statsmodels scikit-learn
-   
+
    # Install visualization libraries
    pip install matplotlib seaborn plotly
    ```
