@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 
 import aiohttp
-import jinja2
+import jinja2  # type: ignore[import-untyped]
 
 
 class NotificationPriority(Enum):
@@ -766,20 +766,22 @@ System status: {{ system_status }}
         )
 
         # Channel success rates
-        channel_stats = {}
+        channel_stats: dict[str, dict[str, int | float]] = {}
         for notification in recent_notifications:
             for channel in notification["channels_attempted"]:
                 if channel not in channel_stats:
                     channel_stats[channel] = {"attempted": 0, "successful": 0}
 
-                channel_stats[channel]["attempted"] += 1
+                channel_stats[channel]["attempted"] += 1  # type: ignore[assignment]
                 if channel in notification["successful_channels"]:
-                    channel_stats[channel]["successful"] += 1
+                    channel_stats[channel]["successful"] += 1  # type: ignore[assignment]
 
         # Calculate success rates
         for _, stats in channel_stats.items():
-            stats["success_rate"] = (
-                float((stats["successful"] / stats["attempted"]) * 100) if stats["attempted"] > 0 else 0
+            stats["success_rate"] = (  # type: ignore[assignment]
+                float((stats["successful"] / stats["attempted"]) * 100)
+                if stats["attempted"] > 0
+                else 0.0
             )
 
         # Priority distribution

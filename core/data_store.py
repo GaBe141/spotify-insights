@@ -530,7 +530,7 @@ class EnhancedMusicDataStore:
             """
             params.append(limit)
 
-            df = pd.read_sql_query(query, conn, params=params)
+            df = pd.read_sql_query(query, conn, params=tuple(params))  # type: ignore[arg-type]
 
             # Parse metadata if it exists
             if not df.empty and "metadata" in df.columns:
@@ -567,7 +567,7 @@ class EnhancedMusicDataStore:
             """
             params.append(limit)
 
-            df = pd.read_sql_query(query, conn, params=params)
+            df = pd.read_sql_query(query, conn, params=tuple(params))  # type: ignore[arg-type]
 
             # Parse prediction features
             if not df.empty and "prediction_features" in df.columns:
@@ -679,7 +679,7 @@ class EnhancedMusicDataStore:
             ORDER BY score DESC
             """
 
-            df = pd.read_sql_query(query, conn, params=params)
+            df = pd.read_sql_query(query, conn, params=tuple(params))  # type: ignore[arg-type]
 
             # Parse metadata
             if not df.empty and "metadata" in df.columns:
@@ -733,7 +733,9 @@ class EnhancedMusicDataStore:
             WHERE {' AND '.join(conditions)}
             """
 
-            stats = pd.read_sql_query(stats_query, conn, params=params).to_dict("records")[0]
+            stats = pd.read_sql_query(
+                stats_query, conn, params=tuple(params)  # type: ignore[arg-type]
+            ).to_dict("records")[0]
 
             # Get top tracks
             top_tracks_query = f"""
@@ -745,7 +747,9 @@ class EnhancedMusicDataStore:
             LIMIT 10
             """
 
-            top_tracks = pd.read_sql_query(top_tracks_query, conn, params=params).to_dict("records")
+            top_tracks = pd.read_sql_query(
+                top_tracks_query, conn, params=tuple(params)  # type: ignore[arg-type]
+            ).to_dict("records")
 
             result = {
                 "stats": stats,

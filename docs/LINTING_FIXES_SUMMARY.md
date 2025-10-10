@@ -41,7 +41,7 @@ priority_distribution: dict[str, int] = {}  # Line 785
 #### 2. Pathlib Migration
 Replaced `os.path` with `pathlib.Path`:
 - `os.path.exists()` → `Path().exists()` (lines 159, 474)
-- `open()` → `Path().open()` (lines 161, 475)  
+- `open()` → `Path().open()` (lines 161, 475)
 - `os.path.basename()` → `Path().name` (line 481)
 
 Added import: `from pathlib import Path`
@@ -60,7 +60,7 @@ async with aiohttp.ClientSession() as session, session.post(url, json=data) as r
 
 Applied to:
 - Slack webhook (line 563)
-- Discord webhook (line 627)  
+- Discord webhook (line 627)
 - Generic webhook (line 678)
 
 #### 4. Unused Loop Variables
@@ -160,7 +160,7 @@ python scripts/fix_linting_issues.py
 
 Successfully applied comprehensive linting fixes across the codebase:
 - **Security**: No new issues introduced
-- **Performance**: Improved code clarity and maintainability  
+- **Performance**: Improved code clarity and maintainability
 - **Type Safety**: Enhanced with proper annotations
 - **Code Quality**: Modernized to Python 3.11+ standards
 - **Maintainability**: Simplified context managers and imports
