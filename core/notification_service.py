@@ -15,6 +15,7 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from enum import Enum
+from pathlib import Path
 from typing import Any
 
 import aiohttp
@@ -84,17 +85,16 @@ class EnhancedNotificationService:
     def __init__(self, config_file: str | None = None):
         self.logger = logging.getLogger(__name__)
         self.config = self._load_config(config_file)
-        self.sent_notifications = {}
-        self.notification_history = []
-        self.failed_deliveries = []
+        self.sent_notifications: dict[str, Any] = {}
+        self.notification_history: list[dict[str, Any]] = []
+        self.failed_deliveries: list[dict[str, Any]] = []
 
         # Initialize template engine with autoescape enabled for security
         self.template_env = jinja2.Environment(
             loader=jinja2.DictLoader(self._load_templates()),
             autoescape=jinja2.select_autoescape(
-                enabled_extensions=('html', 'xml', 'jinja2'),
-                default_for_string=True
-            )
+                enabled_extensions=("html", "xml", "jinja2"), default_for_string=True
+            ),
         )
 
         # Channel handlers
@@ -157,9 +157,9 @@ class EnhancedNotificationService:
             },
         }
 
-        if config_file and os.path.exists(config_file):
+        if config_file and Path(config_file).exists():
             try:
-                with open(config_file) as f:
+                with Path(config_file).open() as f:
                     user_config = json.load(f)
                     # Deep merge configurations
                     self._deep_merge(default_config, user_config)
@@ -472,14 +472,14 @@ System status: {{ system_status }}
             # Add attachments
             if message.attachments:
                 for attachment_path in message.attachments:
-                    if os.path.exists(attachment_path):
-                        with open(attachment_path, "rb") as f:
+                    if Path(attachment_path).exists():
+                        with Path(attachment_path).open("rb") as f:
                             attachment = MIMEBase("application", "octet-stream")
                             attachment.set_payload(f.read())
                             encoders.encode_base64(attachment)
                             attachment.add_header(
                                 "Content-Disposition",
-                                f"attachment; filename= {os.path.basename(attachment_path)}",
+                                f"attachment; filename= {Path(attachment_path).name}",
                             )
                             msg.attach(attachment)
 
@@ -560,17 +560,19 @@ System status: {{ system_status }}
                 if fields:
                     slack_message["attachments"][0]["fields"] = fields
 
-            async with aiohttp.ClientSession() as session:
-                async with session.post(webhook_url, json=slack_message) as response:
-                    if response.status == 200:
-                        self.logger.info("Slack notification sent successfully")
-                        return {"success": True, "status_code": response.status}
-                    else:
-                        error_text = await response.text()
-                        self.logger.error(
-                            f"Slack notification failed: {response.status} - {error_text}"
-                        )
-                        return {"success": False, "error": f"HTTP {response.status}: {error_text}"}
+            async with (
+                aiohttp.ClientSession() as session,
+                session.post(webhook_url, json=slack_message) as response,
+            ):
+                if response.status == 200:
+                    self.logger.info("Slack notification sent successfully")
+                    return {"success": True, "status_code": response.status}
+                else:
+                    error_text = await response.text()
+                    self.logger.error(
+                        f"Slack notification failed: {response.status} - {error_text}"
+                    )
+                    return {"success": False, "error": f"HTTP {response.status}: {error_text}"}
 
         except Exception as e:
             self.logger.error(f"Failed to send Slack notification: {e}")
@@ -610,7 +612,7 @@ System status: {{ system_status }}
 
             # Add fields for structured data
             if message.data:
-                fields = []
+                fields: list[dict[str, Any]] = []
                 for key, value in message.data.items():
                     if isinstance(value, (int, float, str)) and len(fields) < 25:  # Discord limit
                         fields.append(
@@ -624,17 +626,19 @@ System status: {{ system_status }}
                 if fields:
                     discord_message["embeds"][0]["fields"] = fields
 
-            async with aiohttp.ClientSession() as session:
-                async with session.post(webhook_url, json=discord_message) as response:
-                    if response.status in [200, 204]:
-                        self.logger.info("Discord notification sent successfully")
-                        return {"success": True, "status_code": response.status}
-                    else:
-                        error_text = await response.text()
-                        self.logger.error(
-                            f"Discord notification failed: {response.status} - {error_text}"
-                        )
-                        return {"success": False, "error": f"HTTP {response.status}: {error_text}"}
+            async with (
+                aiohttp.ClientSession() as session,
+                session.post(webhook_url, json=discord_message) as response,
+            ):
+                if response.status in [200, 204]:
+                    self.logger.info("Discord notification sent successfully")
+                    return {"success": True, "status_code": response.status}
+                else:
+                    error_text = await response.text()
+                    self.logger.error(
+                        f"Discord notification failed: {response.status} - {error_text}"
+                    )
+                    return {"success": False, "error": f"HTTP {response.status}: {error_text}"}
 
         except Exception as e:
             self.logger.error(f"Failed to send Discord notification: {e}")
@@ -678,21 +682,21 @@ System status: {{ system_status }}
             headers = webhook_config.get("headers", {"Content-Type": "application/json"})
             timeout = webhook_config.get("timeout", 30)
 
-            async with aiohttp.ClientSession() as session:
-                async with session.post(
+            async with (
+                aiohttp.ClientSession() as session,
+                session.post(
                     url, json=payload, headers=headers, timeout=aiohttp.ClientTimeout(total=timeout)
-                ) as response:
-                    if 200 <= response.status < 300:
-                        self.logger.info(
-                            f"Webhook notification sent successfully: {response.status}"
-                        )
-                        return {"success": True, "status_code": response.status}
-                    else:
-                        error_text = await response.text()
-                        self.logger.error(
-                            f"Webhook notification failed: {response.status} - {error_text}"
-                        )
-                        return {"success": False, "error": f"HTTP {response.status}: {error_text}"}
+                ) as response,
+            ):
+                if 200 <= response.status < 300:
+                    self.logger.info(f"Webhook notification sent successfully: {response.status}")
+                    return {"success": True, "status_code": response.status}
+                else:
+                    error_text = await response.text()
+                    self.logger.error(
+                        f"Webhook notification failed: {response.status} - {error_text}"
+                    )
+                    return {"success": False, "error": f"HTTP {response.status}: {error_text}"}
 
         except Exception as e:
             self.logger.error(f"Failed to send webhook notification: {e}")
@@ -773,13 +777,13 @@ System status: {{ system_status }}
                     channel_stats[channel]["successful"] += 1
 
         # Calculate success rates
-        for channel, stats in channel_stats.items():
+        for _, stats in channel_stats.items():
             stats["success_rate"] = (
-                (stats["successful"] / stats["attempted"]) * 100 if stats["attempted"] > 0 else 0
+                float((stats["successful"] / stats["attempted"]) * 100) if stats["attempted"] > 0 else 0
             )
 
         # Priority distribution
-        priority_distribution = {}
+        priority_distribution: dict[str, int] = {}
         for notification in recent_notifications:
             priority = notification["priority"]
             priority_distribution[priority] = priority_distribution.get(priority, 0) + 1
