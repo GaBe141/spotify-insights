@@ -1,14 +1,44 @@
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
 .venv/
 venv/
+ENV/
+env/
+
+# Environment variables
 .env
 .env.*
 .env.enhanced
 .cache
+
+# IDEs
 .idea/
 .vscode/
+*.swp
+*.swo
+*~
 
 # Sensitive files
 env_data
@@ -22,6 +52,8 @@ config/*_config.json
 
 # Data
 /data/*
+!data/.gitkeep
+!data/README.md
 
 # Enhanced Music Discovery System Files
 *.db
@@ -41,13 +73,34 @@ templates/*.txt
 data/reports/
 data/trends/
 data/visualizations/
+data/playlists/
+data/exports/
+data/trending/
+data/trending_visualizations/
 
 # Generated and temporary files
 *.temp
 temp/
 tmp/
 *.tmp
-!data/.gitkeep
 
 # Notebooks
 *.ipynb_checkpoints
+.ipynb_checkpoints/
+
+# OS specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# Documentation builds
+docs/_build/
+site/

@@ -2,12 +2,11 @@
 
 import requests
 import pandas as pd
-from typing import Dict, List, Optional
+from typing import Dict, List
 import time
 from bs4 import BeautifulSoup
 import json
 from datetime import datetime, timedelta
-from .config import get_config
 
 CHARTS_BASE_URL = "https://charts.spotify.com"
 
@@ -112,7 +111,7 @@ class SpotifyChartsAPI:
             
             # Try to extract basic info (this is very site-specific)
             if len(text_content.split()) >= 3:
-                parts = text_content.split()
+                text_content.split()
                 chart_data.append({
                     'position': i + 1,
                     'track_name': 'Unknown',  # Would need specific parsing
@@ -137,7 +136,7 @@ class SpotifyChartsAPI:
             response = self.session.get(url)
             response.raise_for_status()
             
-            soup = BeautifulSoup(response.content, 'html.parser')
+            BeautifulSoup(response.content, 'html.parser')
             
             # Similar parsing logic as top_200_daily but for viral charts
             viral_data = []

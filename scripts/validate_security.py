@@ -8,7 +8,8 @@ from pathlib import Path
 src_path = Path(__file__).resolve().parent / "src"
 sys.path.insert(0, str(src_path))
 
-from src.config import SecureConfig
+# Import after path modification
+from src.config import SecureConfig  # noqa: E402
 
 
 def main():

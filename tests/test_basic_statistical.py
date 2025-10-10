@@ -9,7 +9,6 @@ sys.path.append(str(Path(__file__).parent / "src"))
 from statistical_analysis import StreamingDataQualityAnalyzer
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
 
 
 def test_basic_functionality():
@@ -44,8 +43,8 @@ def test_basic_functionality():
         )
         
         print("\n📊 Quality Analysis Results:")
-        print(f"   ✅ Analysis completed successfully")
-        print(f"   📈 Basic stats calculated")
+        print("   ✅ Analysis completed successfully")
+        print("   📈 Basic stats calculated")
         print(f"   🕒 Temporal analysis: {'✅' if 'temporal_analysis' in quality_report else '❌'}")
         print(f"   🚨 Outlier detection: {'✅' if 'outlier_analysis' in quality_report else '❌'}")
         print(f"   💡 Recommendations: {len(quality_report.get('recommendations', []))}")
@@ -58,7 +57,7 @@ def test_basic_functionality():
         # Test temporal analysis specifically
         if 'temporal_analysis' in quality_report:
             temporal = quality_report['temporal_analysis']
-            print(f"\n   🕒 Temporal Analysis:")
+            print("\n   🕒 Temporal Analysis:")
             if 'date_range' in temporal:
                 print(f"      Date range: {temporal['date_range']['start']} to {temporal['date_range']['end']}")
                 print(f"      Span: {temporal['date_range']['span_days']} days")
@@ -112,7 +111,7 @@ def test_data_preparation():
     missing_values = basic_stats.get('missing_values', {})
     zero_values = basic_stats.get('zero_values', {})
     
-    print(f"\n📊 Quality Metrics:")
+    print("\n📊 Quality Metrics:")
     print(f"   Missing values detected: {missing_values.get('streams', 0)}")
     print(f"   Zero values detected: {zero_values.get('streams', 0)}")
     print(f"   Total rows: {basic_stats.get('total_rows', 0)}")
@@ -140,7 +139,7 @@ def demonstrate_insights():
         'shares': base_streams * 0.05
     })
     
-    print(f"✅ Created viral event scenario")
+    print("✅ Created viral event scenario")
     print(f"   Peak streams: {data['streams'].max():.0f}")
     print(f"   Average streams: {data['streams'].mean():.0f}")
     
@@ -156,9 +155,9 @@ def demonstrate_insights():
             print(f"   {metric}: {outlier_pct:.1f}% outliers detected")
             
             if outlier_pct > 15:
-                print(f"      🚨 HIGH ANOMALY: Possible viral content or data quality issue")
+                print("      🚨 HIGH ANOMALY: Possible viral content or data quality issue")
             elif outlier_pct > 5:
-                print(f"      ⚠️ MODERATE ANOMALY: Worth investigating")
+                print("      ⚠️ MODERATE ANOMALY: Worth investigating")
     
     return data, quality_report
 

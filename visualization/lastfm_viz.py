@@ -4,7 +4,6 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 from typing import Dict
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
@@ -126,7 +125,7 @@ def plot_genre_popularity_matrix(genre_trends: Dict[str, pd.DataFrame],
             matrix_data.append((genre, top_artists))
     
     # Create artist popularity matrix
-    top_artists_list = list(all_artists)[:20]  # Limit for visualization
+    list(all_artists)[:20]  # Limit for visualization
     
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 8))
     
@@ -181,7 +180,7 @@ def plot_genre_popularity_matrix(genre_trends: Dict[str, pd.DataFrame],
         # Add text annotations
         for i in range(len(genres)):
             for j in range(len(genres)):
-                text = ax2.text(j, i, int(overlap_matrix[i, j]),
+                ax2.text(j, i, int(overlap_matrix[i, j]),
                                ha="center", va="center", color="black", fontsize=10)
         
         # Add colorbar
@@ -258,7 +257,7 @@ def plot_listening_influence_analysis(spotify_enriched: pd.DataFrame,
     top_global = df_clean.nlargest(10, 'lastfm_listeners')
     y_pos = np.arange(len(top_global))
     
-    bars1 = ax3.barh(y_pos, top_global['rank'], color='#3498DB', alpha=0.7, label='Your Rank')
+    ax3.barh(y_pos, top_global['rank'], color='#3498DB', alpha=0.7, label='Your Rank')
     ax3.set_yticks(y_pos)
     ax3.set_yticklabels([f"{name[:15]}..." if len(name) > 15 else name 
                         for name in top_global['name']])

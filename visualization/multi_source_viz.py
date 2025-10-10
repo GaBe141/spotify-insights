@@ -140,7 +140,7 @@ class MultiSourceVisualizer:
         
         # Timeline scatter plot
         y_positions = range(len(careers_df))
-        colors = plt.cm.plasma(np.linspace(0, 1, len(careers_df)))
+        plt.cm.plasma(np.linspace(0, 1, len(careers_df)))
         
         scatter = ax1.scatter(careers_df['formed_year'], y_positions, 
                              c=careers_df['formed_year'], cmap='plasma', 

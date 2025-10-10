@@ -2,7 +2,6 @@
 Demo script to test trending schema with real Spotify data and generate visualizations.
 """
 
-import json
 import sys
 from pathlib import Path
 
@@ -62,7 +61,7 @@ def main():
     # Try to create visualizations (if libraries available)
     print("\n🎨 Creating visualizations...")
     try:
-        from src.trending_viz import TrendingVisualizationEngine, visualize_trending_report
+        from src.trending_viz import TrendingVisualizationEngine
         
         # Create visualization directory
         viz_dir = Path("data/trending_visualizations")
@@ -115,15 +114,15 @@ def main():
         print("      Install dependencies: pip install matplotlib seaborn plotly")
     
     # Show top findings
-    print(f"\n🎯 Top Trending Insights:")
+    print("\n🎯 Top Trending Insights:")
     
     if viral_content:
-        print(f"   🔥 Most Viral Content:")
+        print("   🔥 Most Viral Content:")
         for i, item in enumerate(viral_content[:3], 1):
             print(f"      {i}. {item['name']} ({item['growth_rate']:.1f}% growth)")
     
     if emerging_trends:
-        print(f"   🚀 Top Emerging Trends:")
+        print("   🚀 Top Emerging Trends:")
         for i, item in enumerate(emerging_trends[:3], 1):
             print(f"      {i}. {item['name']} (momentum: {item['momentum']:.2f})")
     
@@ -136,7 +135,7 @@ def main():
                 direction_emoji = {"rising": "📈", "falling": "📉", "viral": "🔥", "stable": "➡️"}.get(item['direction'], "📊")
                 print(f"      {i}. {item['name']} {direction_emoji} {item['growth_rate']:+.1f}%")
     
-    print(f"\n✅ Trending analysis complete!")
+    print("\n✅ Trending analysis complete!")
     print(f"📄 Full report: {report_path}")
     
     return report_path

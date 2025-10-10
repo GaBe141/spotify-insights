@@ -1,16 +1,16 @@
 """Multi-source music data integration combining Spotify, Last.fm, MusicBrainz, AudioDB, and Charts."""
 
 import pandas as pd
-from typing import Dict, List
+from typing import Dict
 from pathlib import Path
 import json
 
 from .auth import get_client
 from .fetch import fetch_top_artists, fetch_top_tracks
 from .lastfm_integration import get_lastfm_client, enrich_spotify_artists_with_lastfm
-from .musicbrainz_integration import get_musicbrainz_client, enrich_spotify_artists_with_musicbrainz, analyze_artist_relationships
-from .audiodb_integration import get_audiodb_client, enrich_spotify_artists_with_audiodb, analyze_genre_evolution_with_audiodb
-from .spotify_charts_integration import get_spotify_charts_client, compare_personal_vs_charts
+from .musicbrainz_integration import enrich_spotify_artists_with_musicbrainz, analyze_artist_relationships
+from .audiodb_integration import enrich_spotify_artists_with_audiodb, analyze_genre_evolution_with_audiodb
+from .spotify_charts_integration import compare_personal_vs_charts
 from .multi_source_viz import MultiSourceVisualizer
 
 

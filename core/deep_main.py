@@ -97,14 +97,14 @@ def generate_deep_insights():
     
     # Genre Insights
     top_genres = df['genre'].value_counts().head(5)
-    print(f"🎭 Top 5 Genres in Your Profile:")
+    print("🎭 Top 5 Genres in Your Profile:")
     for i, (genre, count) in enumerate(top_genres.items(), 1):
         print(f"   {i}. {genre} ({count} mentions)")
     print()
     
     # Era Analysis
     era_breakdown = df.groupby('era')['weight'].sum().sort_values(ascending=False)
-    print(f"🕰️ Musical Era Preferences:")
+    print("🕰️ Musical Era Preferences:")
     for era, weight in era_breakdown.items():
         percentage = (weight / era_breakdown.sum()) * 100
         print(f"   • {era}: {percentage:.1f}%")
@@ -115,19 +115,19 @@ def generate_deep_insights():
     if not recent_data.empty:
         seasonal_breakdown = recent_data.groupby('season').size()
         if not seasonal_breakdown.empty:
-            print(f"🌅 Recent Seasonal Listening (last 50 tracks):")
+            print("🌅 Recent Seasonal Listening (last 50 tracks):")
             for season, count in seasonal_breakdown.items():
                 print(f"   • {season}: {count} tracks")
     
     print()
-    print(f"📊 Analysis Summary:")
+    print("📊 Analysis Summary:")
     print(f"   • Total data points analyzed: {len(df):,}")
     print(f"   • Unique genres discovered: {df['genre'].nunique()}")
     print(f"   • Musical eras represented: {df['era'].nunique()}")
     print(f"   • Visualizations created: {len(generated_files)}")
     print()
     print(f"📁 Detailed data saved to: {report['data_file'].name}")
-    print(f"🎨 Charts saved to the 'data' folder")
+    print("🎨 Charts saved to the 'data' folder")
     
     return generated_files
 

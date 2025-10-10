@@ -5,7 +5,6 @@ from pathlib import Path
 import json
 
 # Import the working modules
-from src.auth import get_client  
 from src.fetch import fetch_top_artists, fetch_top_tracks
 from src.musicbrainz_integration import get_musicbrainz_client
 from src.audiodb_integration import get_audiodb_client

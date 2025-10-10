@@ -4,11 +4,6 @@ import requests
 import pandas as pd
 from typing import Dict, List, Optional, Any
 import time
-try:
-    from .config import get_config
-except ImportError:
-    # Fallback for standalone execution
-    pass
 
 BASE_URL = "https://musicbrainz.org/ws/2/"
 USER_AGENT = "SpotifyInsights/1.0 (https://github.com/GaBe141/spotify-insights)"

@@ -55,7 +55,7 @@ def test_audiodb():
         careers_df = career_analysis['careers']
         albums_df = career_analysis['albums']
         
-        print(f"✅ Career analysis complete:")
+        print("✅ Career analysis complete:")
         print(f"   Analyzed {len(careers_df)} artist careers")
         print(f"   Found {len(albums_df)} albums total")
         

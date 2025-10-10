@@ -1,15 +1,13 @@
 """Simple surprise visualizations that work with basic Spotify API permissions."""
 
 from pathlib import Path
+import warnings
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
-from datetime import datetime
-import warnings
-warnings.filterwarnings('ignore')
-
 from .fetch import fetch_top_artists, fetch_recently_played, fetch_top_tracks
+
+warnings.filterwarnings('ignore')
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
@@ -67,7 +65,7 @@ def plot_listening_clock() -> Path:
     counts = [hourly_counts.get(hour, 0) for hour in range(24)]
     
     # Create bar chart
-    bars = ax.bar(theta, counts, width=2*np.pi/24, alpha=0.7, color='#1DB954')
+    ax.bar(theta, counts, width=2*np.pi/24, alpha=0.7, color='#1DB954')
     
     # Customize
     ax.set_theta_zero_location('N')  # Start at top (midnight)

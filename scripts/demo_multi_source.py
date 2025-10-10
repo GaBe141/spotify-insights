@@ -8,7 +8,6 @@ sys.path.append(str(Path(__file__).parent / "src"))
 
 from src.auth import get_client
 from src.fetch import fetch_top_artists
-import pandas as pd
 
 def demo_multi_source_capabilities():
     """Demonstrate the new multi-source integration capabilities."""

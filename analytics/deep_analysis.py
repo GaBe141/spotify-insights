@@ -3,9 +3,8 @@
 from pathlib import Path
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
-import calendar
-from typing import Dict, List, Tuple
+from datetime import datetime
+from typing import Dict
 import re
 
 from .auth import get_client
@@ -113,7 +112,7 @@ def fetch_extended_listening_history() -> pd.DataFrame:
                 try:
                     artist_detail = sp.artist(artist_id)
                     track_genres = artist_detail.get('genres', [])
-                except:
+                except Exception:
                     track_genres = []
             else:
                 track_genres = []
@@ -147,7 +146,7 @@ def fetch_extended_listening_history() -> pd.DataFrame:
             try:
                 artist_detail = sp.artist(artist_id)
                 track_genres = artist_detail.get('genres', [])
-            except:
+            except Exception:
                 track_genres = []
         else:
             track_genres = []
@@ -189,7 +188,7 @@ def analyze_generational_patterns(df: pd.DataFrame) -> Dict:
     results = {}
     
     # Current year for age-related analysis
-    current_year = datetime.now().year
+    datetime.now().year
     
     # Era preference analysis
     era_counts = df.groupby(['time_range', 'era']).agg({

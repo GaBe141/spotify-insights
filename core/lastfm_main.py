@@ -106,13 +106,13 @@ def run_lastfm_integration():
             max_listeners = valid_data['lastfm_listeners'].max()
             most_popular_artist = valid_data.loc[valid_data['lastfm_listeners'].idxmax(), 'name']
             
-            print(f"🌍 Global Reach Analysis:")
+            print("🌍 Global Reach Analysis:")
             print(f"   • Average global listeners: {avg_listeners:,.0f}")
             print(f"   • Most globally popular: {most_popular_artist} ({max_listeners:,.0f} listeners)")
     
     # Genre breakdown
     if genre_data:
-        print(f"🎭 Genre Analysis:")
+        print("🎭 Genre Analysis:")
         for genre_key, genre_df in list(genre_data.items())[:5]:
             genre_name = genre_key.replace('genre_', '').replace('_', ' ').title()
             print(f"   • {genre_name}: {len(genre_df)} top artists tracked")

@@ -1,11 +1,7 @@
 from pathlib import Path
 import pandas as pd
 import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
-from matplotlib.patches import Circle
-import matplotlib.dates as mdates
-from datetime import datetime
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
@@ -138,7 +134,6 @@ def plot_playlist_characteristics(df: pd.DataFrame, title: str = "Playlist Audio
         raise ValueError("Need at least 3 playlists for meaningful visualization")
     
     # Select key features for comparison
-    features = ['danceability', 'energy', 'valence', 'acousticness']
     
     fig, axes = plt.subplots(2, 2, figsize=(12, 10))
     axes = axes.ravel()

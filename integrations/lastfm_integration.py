@@ -2,8 +2,7 @@
 
 import requests
 import pandas as pd
-from typing import Dict, List, Optional
-from pathlib import Path
+from typing import Dict, Optional
 import time
 import json
 from .config import get_config

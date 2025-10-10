@@ -5,8 +5,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from matplotlib.patches import Wedge
-import matplotlib.patches as mpatches
 from datetime import datetime
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"

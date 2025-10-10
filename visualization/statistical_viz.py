@@ -3,7 +3,7 @@
 import json
 import warnings
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, Any, Optional
 
 import pandas as pd
 import numpy as np
@@ -12,8 +12,6 @@ warnings.filterwarnings('ignore')
 
 try:
     import matplotlib.pyplot as plt
-    import matplotlib.dates as mdates
-    from matplotlib.patches import Rectangle
     import seaborn as sns
     MATPLOTLIB_AVAILABLE = True
 except ImportError:
@@ -22,11 +20,9 @@ except ImportError:
 try:
     import plotly.graph_objects as go
     from plotly.subplots import make_subplots
-    import plotly.express as px
     PLOTLY_AVAILABLE = True
 except ImportError:
     PLOTLY_AVAILABLE = False
-
 
 class StatisticalVisualizationEngine:
     """Advanced visualization for statistical analysis and forecasting."""
