@@ -8,6 +8,14 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
+# Re-export for convenience
+try:
+    import pandas as pd
+
+    HAS_PANDAS = True
+except ImportError:
+    HAS_PANDAS = False
+
 
 # JSON utilities
 def read_json(path: Path | str, default: Any = None) -> Any:
@@ -164,3 +172,143 @@ def safe_get_nested(data: dict[str, Any], keys: list[str], default: Any = None) 
         else:
             return default
     return current
+
+
+# DataFrame utilities (requires pandas)
+def load_dataframe(
+    filepath: Path | str,
+    required_columns: list[str] | None = None,
+    default_empty: bool = True,
+) -> Any:  # pd.DataFrame | None
+    """
+    Load DataFrame from CSV with error handling.
+
+    Args:
+        filepath: Path to CSV file
+        required_columns: List of columns that must be present
+        default_empty: Return empty DataFrame instead of None if file doesn't exist
+
+    Returns:
+        DataFrame or empty DataFrame (if default_empty=True) or None
+
+    Examples:
+        >>> df = load_dataframe("data/tracks.csv", required_columns=["id", "name"])
+        >>> df = load_dataframe("missing.csv", default_empty=False)  # Returns None
+    """
+    if not HAS_PANDAS:
+        raise ImportError("pandas is required for load_dataframe")
+
+    filepath = Path(filepath)
+
+    if not filepath.exists():
+        logger.warning(f"CSV file not found: {filepath}")
+        return pd.DataFrame() if default_empty else None
+
+    try:
+        df = pd.read_csv(filepath)
+
+        # Validate required columns
+        if required_columns:
+            missing = set(required_columns) - set(df.columns)
+            if missing:
+                logger.error(f"Missing required columns in {filepath}: {missing}")
+                return pd.DataFrame() if default_empty else None
+
+        logger.debug(f"Loaded DataFrame from {filepath} ({len(df)} rows)")
+        return df
+
+    except Exception as e:
+        logger.error(f"Failed to load CSV from {filepath}: {e}")
+        return pd.DataFrame() if default_empty else None
+
+
+def ensure_datetime_column(
+    df: Any,  # pd.DataFrame
+    column: str,
+    date_formats: list[str] | None = None,
+    errors: str = "coerce",
+) -> Any:  # pd.DataFrame
+    """
+    Convert DataFrame column to datetime with fallback handling.
+
+    Args:
+        df: DataFrame to modify
+        column: Column name to convert
+        date_formats: List of date formats to try (None = auto-detect)
+        errors: How to handle errors ('coerce', 'raise', 'ignore')
+
+    Returns:
+        DataFrame with converted column (modifies in place)
+
+    Examples:
+        >>> df = ensure_datetime_column(df, "played_at")
+        >>> df = ensure_datetime_column(df, "timestamp", date_formats=["%Y-%m-%d"])
+    """
+    if not HAS_PANDAS:
+        raise ImportError("pandas is required for ensure_datetime_column")
+
+    if column not in df.columns:
+        logger.warning(f"Column {column} not found in DataFrame")
+        return df
+
+    # Already datetime?
+    if pd.api.types.is_datetime64_any_dtype(df[column]):
+        return df
+
+    # Try conversion
+    try:
+        if date_formats:
+            # Try each format
+            for fmt in date_formats:
+                try:
+                    df[column] = pd.to_datetime(df[column], format=fmt, errors=errors)
+                    logger.debug(f"Converted {column} to datetime using format {fmt}")
+                    return df
+                except Exception:
+                    continue
+            # If all fail, use auto-detect
+            df[column] = pd.to_datetime(df[column], errors=errors)
+        else:
+            # Auto-detect
+            df[column] = pd.to_datetime(df[column], errors=errors)
+
+        logger.debug(f"Converted {column} to datetime")
+        return df
+
+    except Exception as e:
+        logger.error(f"Failed to convert {column} to datetime: {e}")
+        return df
+
+
+# Timestamp utilities
+def get_iso_timestamp() -> str:
+    """
+    Get current timestamp in ISO 8601 format.
+
+    Returns:
+        ISO formatted timestamp string
+
+    Examples:
+        >>> ts = get_iso_timestamp()
+        '2025-10-10T14:30:52.123456'
+    """
+    return datetime.now().isoformat()
+
+
+def get_date_string(fmt: str = "%Y-%m-%d") -> str:
+    """
+    Get current date as formatted string.
+
+    Args:
+        fmt: strftime format string
+
+    Returns:
+        Formatted date string
+
+    Examples:
+        >>> get_date_string()
+        '2025-10-10'
+        >>> get_date_string("%Y%m%d")
+        '20251010'
+    """
+    return datetime.now().strftime(fmt)

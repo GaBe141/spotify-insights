@@ -23,6 +23,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from core.utils import ensure_datetime_column, load_dataframe
+
 
 class TemporalAnalyzer:
     """Analyze temporal patterns in music listening behavior."""
@@ -44,28 +46,29 @@ class TemporalAnalyzer:
         self.temporal_patterns: dict[str, Any] = {}
 
     def load_listening_history(self, filename: str = "recently_played.csv") -> pd.DataFrame:
-        """Load listening history from CSV file."""
+        """Load listening history from CSV file using centralized utility."""
         filepath = self.data_dir / filename
 
-        if not filepath.exists():
-            print(f"⚠️  File not found: {filepath}")
-            # Create sample data for demonstration
-            return self._generate_sample_data()
+        # Try to load with utility
+        df = load_dataframe(filepath, default_empty=False)
 
-        df = pd.read_csv(filepath)
+        if df is None or df.empty:
+            print(f"⚠️  File not found or empty: {filepath}")
+            return self._generate_sample_data()
 
         # Convert timestamp columns to datetime
         timestamp_cols = ["played_at", "timestamp", "time", "datetime"]
         for col in timestamp_cols:
             if col in df.columns:
-                try:
-                    df["played_at"] = pd.to_datetime(df[col])
-                    break
-                except Exception:
-                    continue
+                df = ensure_datetime_column(df, col)
+                if col != "played_at":
+                    df["played_at"] = df[col]
+                break
 
         # If no timestamp found, generate them
-        if "played_at" not in df.columns:
+        if "played_at" not in df.columns or not pd.api.types.is_datetime64_any_dtype(
+            df["played_at"]
+        ):
             print("⚠️  No timestamp column found, generating sample timestamps...")
             df = self._add_sample_timestamps(df)
 
@@ -166,11 +169,7 @@ class TemporalAnalyzer:
             lambda h: (
                 "Morning"
                 if 6 <= h < 12
-                else "Afternoon"
-                if 12 <= h < 17
-                else "Evening"
-                if 17 <= h < 21
-                else "Night"
+                else "Afternoon" if 12 <= h < 17 else "Evening" if 17 <= h < 21 else "Night"
             )
         )
 

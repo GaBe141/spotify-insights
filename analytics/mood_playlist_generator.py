@@ -25,6 +25,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from core.utils import load_dataframe
+
 
 class MoodCategory(Enum):
     """Enumeration of available mood categories."""
@@ -141,25 +143,28 @@ class MoodPlaylistGenerator:
         self.mood_playlists: dict[MoodCategory, list[dict[str, Any]]] = {}
 
     def load_tracks(self, filename: str = "simple_top_tracks.csv") -> pd.DataFrame:
-        """Load track data from CSV."""
+        """Load track data from CSV using centralized utility."""
         filepath = self.data_dir / filename
 
-        if not filepath.exists():
-            print(f"⚠️  File not found: {filepath}")
-            # Return empty DataFrame with expected columns
-            return pd.DataFrame(
-                columns=[
-                    "track_name",
-                    "artist_name",
-                    "popularity",
-                    "valence",
-                    "energy",
-                    "danceability",
-                    "tempo",
-                ]
-            )
+        # Define expected columns
+        expected_cols = [
+            "track_name",
+            "artist_name",
+            "popularity",
+            "valence",
+            "energy",
+            "danceability",
+            "tempo",
+        ]
 
-        self.tracks_df = pd.read_csv(filepath)
+        df = load_dataframe(filepath, default_empty=True)
+
+        if df.empty:
+            print(f"⚠️  File not found or empty: {filepath}")
+            # Return empty DataFrame with expected columns
+            return pd.DataFrame(columns=expected_cols)
+
+        self.tracks_df = df
         print(f"✅ Loaded {len(self.tracks_df)} tracks from {filename}")
         return self.tracks_df
 
