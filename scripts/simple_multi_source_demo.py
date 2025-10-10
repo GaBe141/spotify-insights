@@ -1,9 +1,13 @@
 """Simple multi-source demo that works with current API integrations."""
 
-import json
+import sys
 from pathlib import Path
 
 import pandas as pd
+
+# Add core to path for utilities
+sys.path.append(str(Path(__file__).parent.parent / "core"))
+
 from src.audiodb_integration import get_audiodb_client
 
 # Import the working modules
@@ -165,9 +169,10 @@ def simple_multi_source_demo():
             ),
         }
 
-    # Save insights
-    with open(data_dir / "simple_insights.json", "w") as f:
-        json.dump(insights, f, indent=2)
+    # Save insights using centralized utility
+    from core.utils import write_json
+    
+    write_json(str(data_dir / "simple_insights.json"), insights)
 
     # Print summary
     print("\n" + "=" * 50)

@@ -3,7 +3,6 @@ Integration module for trending schema with Spotify streaming data.
 Connects real-time streaming data to trending analysis framework.
 """
 
-import json
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -476,23 +475,23 @@ class SpotifyTrendingIntegration:
             "detailed_snapshot": snapshot,
         }
 
-        # Save main report
-        report_file = output_path / "spotify_trending_report.json"
-        with open(report_file, "w", encoding="utf-8") as f:
-            json.dump(report, f, indent=2, default=str)
+        # Save main report using centralized utility
+        from core.utils import save_report
+
+        saved_path = save_report(report, filename="spotify_trending_report.json", prefix="spotify_trending", output_dir=str(output_path), add_timestamp=False)
 
         # Create text summary
         summary_file = output_path / "trending_summary.txt"
         self._create_text_summary(insights, summary_file)
 
-        print(f"   ✅ Report saved to {report_file}")
+        print(f"   ✅ Report saved to {saved_path}")
         print(f"   ✅ Summary saved to {summary_file}")
 
         return str(output_path)
 
     def _create_text_summary(self, insights: dict[str, Any], output_file: Path):
         """Create human-readable trending summary."""
-        with open(output_file, "w", encoding="utf-8") as f:
+        with output_file.open("w", encoding="utf-8") as f:
             f.write("SPOTIFY TRENDING ANALYSIS REPORT\n")
             f.write("=" * 40 + "\n\n")
 

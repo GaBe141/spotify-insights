@@ -3,12 +3,10 @@ Comprehensive trending schema system for music analytics.
 Tracks, analyzes, and predicts trending patterns across multiple dimensions.
 """
 
-import json
 import warnings
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -579,13 +577,10 @@ class TrendingSchema:
         emerging_trends = self.get_emerging_trends()
         snapshot["emerging_trends"] = [item.to_dict() for item in emerging_trends]
 
-        # Save to file
-        filepath_obj = Path(filepath)
-        filepath_obj.parent.mkdir(parents=True, exist_ok=True)
+        # Save to file using centralized utility
+        from core.utils import write_json
 
-        with open(filepath_obj, "w") as f:
-            json.dump(snapshot, f, indent=2, default=str)
-
+        write_json(filepath, snapshot)
         return snapshot
 
 

@@ -1,12 +1,12 @@
 """Demonstration script showing statistical analysis on real Spotify data."""
 
-import json
 import sys
 from datetime import datetime
 from pathlib import Path
 
 # Add src directory to path
 sys.path.append(str(Path(__file__).parent / "src"))
+sys.path.append(str(Path(__file__).parent.parent / "core"))
 
 import pandas as pd
 from src.statistical_analysis import StreamingDataQualityAnalyzer
@@ -281,10 +281,11 @@ def create_analysis_report(data_files, insights):
             "sample_data": df.head(3).to_dict("records") if len(df) > 0 else [],
         }
 
-    # Save report
+    # Save report using centralized utility
+    from core.utils import write_json
+    
     report_path = Path("data") / "streaming_analysis_report.json"
-    with open(report_path, "w") as f:
-        json.dump(report, f, indent=2, default=str)
+    write_json(str(report_path), report)
 
     print(f"   ✅ Report saved to {report_path}")
     return report

@@ -1,6 +1,5 @@
 """Advanced integration of statistical analysis with multi-source streaming data."""
 
-import json
 import sys
 import warnings
 from datetime import datetime, timedelta
@@ -12,6 +11,7 @@ import pandas as pd
 
 # Add src directory to path
 sys.path.append(str(Path(__file__).parent / "src"))
+sys.path.append(str(Path(__file__).parent.parent / "core"))
 
 from src.statistical_analysis import StreamingDataQualityAnalyzer, StreamingForecastingEngine
 from src.statistical_viz import StatisticalVisualizationEngine, visualize_comprehensive_results
@@ -465,10 +465,11 @@ class AdvancedStreamingAnalytics:
             },
         }
 
-        # Save results
+        # Save results using centralized utility
+        from core.utils import write_json
+        
         results_file = output_path / "comprehensive_analysis_results.json"
-        with open(results_file, "w") as f:
-            json.dump(comprehensive_results, f, indent=2, default=str)
+        write_json(str(results_file), comprehensive_results)
 
         print(f"   ✅ Results saved to {results_file}")
 
@@ -494,7 +495,7 @@ class AdvancedStreamingAnalytics:
 
     def _create_text_summary(self, results: dict[str, Any], output_file: Path):
         """Create human-readable text summary."""
-        with open(output_file, "w") as f:
+        with output_file.open("w") as f:
             f.write("SPOTIFY INSIGHTS - ADVANCED STATISTICAL ANALYSIS REPORT\n")
             f.write("=" * 60 + "\n\n")
 
